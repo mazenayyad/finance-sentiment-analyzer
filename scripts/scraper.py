@@ -1,22 +1,33 @@
 import requests
-import xml.etree.ElementTree as ET
+from bs4 import BeautifulSoup
+import time
 
-# RSS feed URL for Bitcoin news
-rss_url = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
+def scrape_forbes_article(article_url):
+    try:
+        response = requests.get(article_url, headers={"User-Agent": "Mozilla/5.0"})
+        
+        if response.status_code != 200:
+            return f"Failed to fetch forbes article. HTTP Status Code: {response.status_code}"
 
-# Fetch the RSS feed
-response = requests.get(rss_url, headers={"User-Agent": "Mozilla/5.0"})
+        html = response.content
+        soup = BeautifulSoup(html, "html.parser") # parse raw HTML into a structured tree using Python's built-in HTML parser
 
-# Parse the XML content
-root = ET.fromstring(response.content)
+        article_body = soup.find("div", class_="article-body fs-article fs-responsive-text current-article")
+        if not article_body:
+            return "Main content not found. The forbes page structure might have changed."
+        
+        paragraphs = article_body.find_all("p") # returns a list of all <p> tags
 
-# Extract and display articles
-for item in root.findall(".//item"):
-    title = item.find("title").text
-    link = item.find("link").text
-    pub_date = item.find("pubDate").text
+        paragraph_texts = []
 
-    print(f"Title: {title}")
-    print(f"Link: {link}")
-    print(f"Published: {pub_date}")
-    print("-" * 40)
+        for p in paragraphs:
+            text = p.get_text(strip=True)
+            paragraph_texts.append(text)
+
+        # join all the paragraph texts into one string, separated by spaces
+        article_content = " ".join(paragraph_texts)
+
+        return article_content
+
+    except Exception as e:
+        return f"An error occurred when fetching forbes article: {e}"
