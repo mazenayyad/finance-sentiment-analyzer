@@ -1,36 +1,29 @@
 import requests
 import xml.etree.ElementTree as ET
 
-rss_url = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
-response = requests.get(rss_url, headers={"User-Agent": "Mozilla/5.0"})
+def scrape(rss_url):
+    response = requests.get(rss_url, headers={"User-Agent": "Mozilla/5.0"})
+    if response.status_code == 200:
+        # parse from the rss feed
+        root = ET.fromstring(response.content)
+        # items = a list of all articles
+        items = root.findall(".//item")
 
-if response.status_code == 200:
-    # parse the rss feed
-    root = ET.fromstring(response.content)
+        articles = []
 
-    # list of all articles
-    items = root.findall(".//item")
-
-    forbes_content = []
-
-    for item in items:
-        title = item.find("title").text
-        link = item.find("link").text
-        pub_date = item.find("pubDate").text
-
-        source_tag = item.find("source")
-        if source_tag is not None:
-            source_url = source_tag.get("url")
-            source_name = source_tag.text
-
-            if "forbes.com" in source_url:
-                forbes_content.append({
-                    "title": title,
-                    "source": source_name,
-                    "source_url": source_url,
-                    "redirect_link": link, # google news redirect link
-                    "published": pub_date
-                })
-
-else:
-    print(f"Failed to fetch RSS feed. HTTP Status Code: {response.status_code}")
+        for item in items:
+            title = item.find("title").text
+            link = item.find("link").text
+            pub_date = item.find("pubDate").text
+            source_name = item.find("source").text
+            clean_title = title.split(" - ")[0]
+            articles.append({
+                "title": clean_title,
+                "link": link,
+                "published": pub_date,
+                "source": source_name
+            })
+        return articles  # returns a list of articles with their metadata
+    else:
+        print(f"Failed to fetch RSS feed. HTTP Status Code: {response.status_code}")
+        return []  # return an empty list in case of failure
