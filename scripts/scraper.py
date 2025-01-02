@@ -1,33 +1,36 @@
 import requests
-from bs4 import BeautifulSoup
-import time
+import xml.etree.ElementTree as ET
 
-def scrape_forbes_article(article_url):
-    try:
-        response = requests.get(article_url, headers={"User-Agent": "Mozilla/5.0"})
-        
-        if response.status_code != 200:
-            return f"Failed to fetch forbes article. HTTP Status Code: {response.status_code}"
+rss_url = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
+response = requests.get(rss_url, headers={"User-Agent": "Mozilla/5.0"})
 
-        html = response.content
-        soup = BeautifulSoup(html, "html.parser") # parse raw HTML into a structured tree using Python's built-in HTML parser
+if response.status_code == 200:
+    # parse the rss feed
+    root = ET.fromstring(response.content)
 
-        article_body = soup.find("div", class_="article-body fs-article fs-responsive-text current-article")
-        if not article_body:
-            return "Main content not found. The forbes page structure might have changed."
-        
-        paragraphs = article_body.find_all("p") # returns a list of all <p> tags
+    # list of all articles
+    items = root.findall(".//item")
 
-        paragraph_texts = []
+    forbes_content = []
 
-        for p in paragraphs:
-            text = p.get_text(strip=True)
-            paragraph_texts.append(text)
+    for item in items:
+        title = item.find("title").text
+        link = item.find("link").text
+        pub_date = item.find("pubDate").text
 
-        # join all the paragraph texts into one string, separated by spaces
-        article_content = " ".join(paragraph_texts)
+        source_tag = item.find("source")
+        if source_tag is not None:
+            source_url = source_tag.get("url")
+            source_name = source_tag.text
 
-        return article_content
+            if "forbes.com" in source_url:
+                forbes_content.append({
+                    "title": title,
+                    "source": source_name,
+                    "source_url": source_url,
+                    "redirect_link": link, # google news redirect link
+                    "published": pub_date
+                })
 
-    except Exception as e:
-        return f"An error occurred when fetching forbes article: {e}"
+else:
+    print(f"Failed to fetch RSS feed. HTTP Status Code: {response.status_code}")
