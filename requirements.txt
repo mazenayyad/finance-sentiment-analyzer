@@ -1,3 +1,2 @@
-transformers
-pandas
-snscrape
+requests
+xml.etree.ElementTree
