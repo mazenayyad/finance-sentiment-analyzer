@@ -11,20 +11,21 @@ def analyze_sentiment(articles):
     for article in articles:
         title = article["title"]
 
-        # preprocess the title
+        # tokenize the title for the model
         inputs = tokenizer(title, return_tensors="pt", padding=True, truncation=True, max_length=512)
 
-        # get predictions
+        # send the tokenized title to the model
         outputs = model(**inputs)
+
+        # extract logits from model (raw data)
         logits = outputs.logits
 
-        # convert logits to probabilities
+        # softmax to obtain human understandable probabilities
         probabilities = torch.nn.functional.softmax(logits, dim=1)
 
-        # get the predicted sentiment
+        # argmax to obtain the most likely class (negative neutral or positive)
         predicted_class = torch.argmax(probabilities, dim=1).item()
 
-        # map the class to a sentiment label
         sentiment = ['negative', 'neutral', 'positive'][predicted_class]
         article["sentiment"] = sentiment # add sentiment to the article
 
