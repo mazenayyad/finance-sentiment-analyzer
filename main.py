@@ -24,7 +24,7 @@ def analyze_sentiment(articles):
         probabilities = torch.nn.functional.softmax(logits, dim=1)
 
         # extract the 3 numbers
-        p_neg, p_neu, p_pos = probabilities[0].tolist()
+        p_neu, p_pos, p_neg = probabilities[0].tolist()
 
         # -100 to 100 sentiment score
         score = 100 * (p_pos - p_neg)
@@ -34,8 +34,8 @@ def analyze_sentiment(articles):
         # argmax to obtain the most likely class (negative neutral or positive)
         predicted_class = torch.argmax(probabilities, dim=1).item()
 
-        sentiment = ['negative', 'neutral', 'positive'][predicted_class]
-        article["sentiment"] = sentiment # add sentiment to the article
+        sentiment = ['neutral', 'positive', 'negative'][predicted_class]
+        article["sentiment_label"] = sentiment # add sentiment to the article
 
     return articles
 
@@ -53,14 +53,7 @@ if __name__ == "__main__":
         print(f"Title: {article['title']}")
         print(f"Source: {article['source']}")
         print(f"Published: {article['published']}")
-        print(f"Sentiment: {article['sentiment']}")
+        print(f"Sentiment: {article['sentiment_label']}")
+        print(f"Sentiment Score: {article['sentiment_score']}")
         print(f"Link: {article['link']}")
         print("-" * 80)
-
-
-'''
-probably dont force neutrality to be 0
-however i want to have still a sentiment label like neutral positive or negative
-such that if it was neutral, it wouldnt be 0, but close to 0. so user should know perhaps if that means
-that its neutral or if its negative/positive? something to think about.
-'''
