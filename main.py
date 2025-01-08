@@ -2,6 +2,7 @@ from scripts.scraper import scrape
 from transformers import BertTokenizer, BertForSequenceClassification
 import torch
 
+# arg is articles which is a list of dictionaries of titles and content. so far its only doing title
 def analyze_sentiment(articles):
     # load finBERT
     tokenizer = BertTokenizer.from_pretrained("yiyanghkust/finbert-tone")
@@ -39,6 +40,27 @@ def analyze_sentiment(articles):
 
     return articles
 
+def aggregate_numeric_scores(articles):
+    if not articles:
+        # if no articles, return something default
+        return "neutral", 0.0
+    
+    total_score = 0.0
+    for article in articles:
+        total_score += article["sentiment_score"]
+
+    avg_score = total_score / len(articles)
+
+    # decide overall label
+    if avg_score > 0:
+        agg_label = "positive"
+    elif avg_score < 0:
+        agg_label = "negative"
+    else:
+        agg_label = "neutral"
+
+    return agg_label, avg_score
+
 if __name__ == "__main__":
     rss_url = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
     
@@ -47,13 +69,4 @@ if __name__ == "__main__":
     # Perform sentiment analysis on the scraped articles
     analyzed_articles = analyze_sentiment(articles)
 
-    # Display the results
-    print("Analyzed Articles:")
-    for article in analyzed_articles:
-        print(f"Title: {article['title']}")
-        print(f"Source: {article['source']}")
-        print(f"Published: {article['published']}")
-        print(f"Sentiment: {article['sentiment_label']}")
-        print(f"Sentiment Score: {article['sentiment_score']}")
-        print(f"Link: {article['link']}")
-        print("-" * 80)
+
