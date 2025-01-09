@@ -75,7 +75,7 @@ def forbes_scraper(url):
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, "html.parser")
-        article_div = soup.find("div", class_="article-body fs-article fs-responsive-text current-article")
+        article_div = soup.find("div", class_=["article-body", "fs-article", "fs-responsive-text", "current-article"])
 
         if article_div:
             paragraphs = article_div.find_all("p")
