@@ -80,7 +80,23 @@ def forbes_scraper(url):
         if article_div:
             paragraphs = article_div.find_all("p")
             content_lines = []
+
+            KEYWORDS = ["bitcoin", "crypto", "cryptocurrency"]
             for p in paragraphs:
+                # if paragraph has a <strong> tag, skip it
+                if p.find("strong") is not None:
+                    continue
+                # check if its a relevant paragraph
+                p_text = p.get_text(strip=True).lower()
+                kw_found = False
+                for kw in KEYWORDS:
+                    if kw in p_text.lower():
+                        kw_found = True
+                        break # found at least 1 keyword. can stop checking
+                if not kw_found:
+                    continue
+
+                # if passed both tests, keep it
                 content_lines.append(p.get_text(strip=True))
             content = " ".join(content_lines)
             return content
