@@ -30,6 +30,7 @@ def scrape(rss_url):
                 url = get_final_url(redirect_link, "forbes.com")
                 if url == "": # if there was an exception, go to the next 
                     continue
+                
                 content = forbes_scraper(url)
                 article_dict = {
                     "title": clean_title,
@@ -41,6 +42,9 @@ def scrape(rss_url):
                 url = get_final_url(redirect_link, "finance.yahoo.com")
                 if url == "":
                     continue
+                if "uk.finance.yahoo.com" in url.lower():
+                    continue
+
                 content = yahoo_scraper(url)
                 article_dict = {
                     "title": clean_title,
