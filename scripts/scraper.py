@@ -37,10 +37,16 @@ def scrape(rss_url):
                     "content": content
                 }
                 articles.append(article_dict)
-            elif 'cnbc' in source_text.lower():
-                pass
             elif 'yahoo' in source_text.lower():
-                pass
+                url = get_final_url(redirect_link, "finance.yahoo.com")
+                if url == "":
+                    continue
+                content = yahoo_scraper(url)
+                article_dict = {
+                    "title": clean_title,
+                    "final_url": url,
+                    "content": content
+                }
             else:
                 continue
         return articles
@@ -90,7 +96,7 @@ def forbes_scraper(url):
                 p_text = p.get_text(strip=True).lower()
                 kw_found = False
                 for kw in KEYWORDS:
-                    if kw in p_text.lower():
+                    if kw in p_text:
                         kw_found = True
                         break # found at least 1 keyword. can stop checking
                 if not kw_found:
@@ -101,7 +107,35 @@ def forbes_scraper(url):
             content = " ".join(content_lines)
             return content
         else:
-            content = " "
-            return content
+            return ""
     else:
-        return None
+        return ""
+    
+def yahoo_scraper(url):
+    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, "html.parser")
+        article_div = soup.find("div", class_=["body", "yf-tsvcyu"])
+
+        if article_div:
+            paragraphs = article_div.find_all("p", class_="yf-1pe5jgt")
+            content_lines = []
+
+            KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
+            for p in paragraphs:
+                p_text = p.get_text(strip=True).lower()
+                kw_found = False
+                for kw in KEYWORDS:
+                    if kw in p_text:
+                        kw_found = True
+                        break
+                if not kw_found:
+                    continue
+                content_lines.append(p.get_text(strip=True))
+            content = " ".join(content_lines)
+            return content
+        else:
+            return ""
+    else:
+        return ""
