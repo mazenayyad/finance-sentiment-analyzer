@@ -81,7 +81,7 @@ def forbes_scraper(url):
             paragraphs = article_div.find_all("p")
             content_lines = []
 
-            KEYWORDS = ["bitcoin", "crypto", "cryptocurrency"]
+            KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
             for p in paragraphs:
                 # if paragraph has a <strong> tag, skip it
                 if p.find("strong") is not None:
