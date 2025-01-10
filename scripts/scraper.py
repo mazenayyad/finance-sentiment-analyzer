@@ -30,7 +30,7 @@ def scrape(rss_url):
                 url = get_final_url(redirect_link, "forbes.com")
                 if url == "": # if there was an exception, go to the next 
                     continue
-                
+
                 content = forbes_scraper(url)
                 article_dict = {
                     "title": clean_title,
@@ -51,6 +51,7 @@ def scrape(rss_url):
                     "final_url": url,
                     "content": content
                 }
+                articles.append(article_dict)
             else:
                 continue
         return articles
