@@ -100,6 +100,7 @@ if __name__ == "__main__":
     for a in analyzed_articles:
         print("---")
         print("Title:", a["title"])
+        print("URL:", a["final_url"])
         print("Summary:", a["summary"])
         print("Sentiment Score:", a["sentiment_score"])
         print("Sentiment Label:", a["sentiment_label"])
