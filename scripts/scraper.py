@@ -21,7 +21,11 @@ def scrape(rss_url):
         items = root.findall('.//item')
         articles = []
 
+        forbes_count = 0
+
         for item in items:
+            if forbes_count == 1:
+                break
             title = item.find("title").text
             redirect_link = item.find("link").text
             clean_title = title.split(" - ")[0]
@@ -38,20 +42,21 @@ def scrape(rss_url):
                     "content": content
                 }
                 articles.append(article_dict)
-            elif 'yahoo' in source_text.lower():
-                url = get_final_url(redirect_link, "finance.yahoo.com")
-                if url == "":
-                    continue
-                if "uk.finance.yahoo.com" in url.lower():
-                    continue
+                forbes_count += 1
+            # elif ('Yahoo Finance' == source_text):
+            #     url = get_final_url(redirect_link, "finance.yahoo.com")
+            #     if url == "":
+            #         continue
+            #     if "uk.finance.yahoo.com" in url.lower():
+            #         continue
 
-                content = yahoo_scraper(url)
-                article_dict = {
-                    "title": clean_title,
-                    "final_url": url,
-                    "content": content
-                }
-                articles.append(article_dict)
+            #     content = yahoo_scraper(url)
+            #     article_dict = {
+            #         "title": clean_title,
+            #         "final_url": url,
+            #         "content": content
+            #     }
+            #     articles.append(article_dict)
             else:
                 continue
         return articles
@@ -73,7 +78,7 @@ def get_final_url(redirect_url, contains):
         WebDriverWait(driver, 10).until(EC.url_contains(contains.lower()))
         final_url = driver.current_url
     except Exception as e: # if we get here means WebDriverWait raised exception
-        print(f'{redirect_url} Selenium Exception: {e}')
+        print(f'Redirect: {redirect_url}, Final: {final_url} Selenium Exception: {e}')
         return ""
     finally:
         driver.quit()
