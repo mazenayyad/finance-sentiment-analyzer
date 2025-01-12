@@ -21,6 +21,7 @@ def scrape(rss_url):
         items = root.findall('.//item')
         articles = []
 
+        # TEMPORARY, REMOVE LATER
         forbes_count = 0
 
         for item in items:
