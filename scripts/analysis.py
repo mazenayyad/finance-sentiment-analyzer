@@ -2,16 +2,27 @@ import torch
 from transformers import BartTokenizer, BartForConditionalGeneration
 from transformers import BertTokenizer, BertForSequenceClassification
 
-# load BART once, globally
-summarizer_tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
-summarizer_model = BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
+summarizer_tokenizer = None
+summarizer_model = None
+finbert_tokenizer = None
+finbert_model = None
 
-# load FinBERT once, globally
-finbert_tokenizer = BertTokenizer.from_pretrained("yiyanghkust/finbert-tone")
-finbert_model = BertForSequenceClassification.from_pretrained("yiyanghkust/finbert-tone")
+def init_models():
+    global summarizer_tokenizer, summarizer_model
+    global finbert_tokenizer, finbert_model
 
+    # if models not initialized
+    if summarizer_tokenizer is None or summarizer_model is None:
+        summarizer_tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
+        summarizer_model = BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
+    if finbert_tokenizer is None or finbert_model is None:
+        finbert_tokenizer = BertTokenizer.from_pretrained("yiyanghkust/finbert-tone")
+        finbert_model = BertForSequenceClassification.from_pretrained("yiyanghkust/finbert-tone")
 
 def summarize_text(text):
+    if summarizer_tokenizer is None or summarizer_model is None:
+        raise RuntimeError("BART models not loaded. Call init_models() first")
+    
     max_tokens = 1024
     max_summary_length = 150
 
@@ -28,6 +39,9 @@ def summarize_text(text):
 
 
 def analyze_sentiment(articles):
+    if finbert_tokenizer is None or finbert_model is None:
+        raise RuntimeError("FinBERT model not loaded. Call init_models() first")
+
     # analyze sentiment for each article
     for article in articles:
         text_to_analyze = article["summary"]
