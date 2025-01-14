@@ -74,6 +74,8 @@ def get_final_url(redirect_url, contains):
     service = Service(driver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
+    final_url = "" # define early incase exception
+
     try:
         driver.get(redirect_url)
         WebDriverWait(driver, 10).until(EC.url_contains(contains.lower()))
