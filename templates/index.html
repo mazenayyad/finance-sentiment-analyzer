@@ -1,6 +1,67 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Analysis Results</title>
-    </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Finance Sentiment Analyzer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/fsalogo.png') }}">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="logo-area">
+      <img 
+        src="{{ url_for('static', filename='img/fsalogo.png') }}"
+        alt="Logo"
+        class="logo"
+      />
+    </div>
+    <nav class="nav-links">
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Finance Sentiment Analyzer</h1>
+      <p class="hero-subtitle">
+        Stay on top of market trends with real-time data and AI-driven insights.
+        <br><br>
+        Our tracker scours reputable finance sources, condenses articles into quick reads, and 
+        displays the overall sentiment—helping you make more informed decisions.
+      </p>
+      <a href="#" class="btn-primary">Results</a>
+    </div>
+
+    <div class="hero-illustration">
+      <img 
+        src="{{ url_for('static', filename='img/illustration.png') }}"
+        alt="Hero Illustration"
+      />
+    </div>
+  </section>
+
+  <!-- Quote -->
+  <section class="quote-section">
+    <blockquote>
+      “In a market where Bitcoin never sleeps, data-driven sentiment turns noise into insight—
+       helping you navigate volatility with confidence.”
+    </blockquote>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>
+      Developed by
+      <a href="https://github.com/mazenayyad" target="_blank" style="color: inherit; text-decoration: underline;">
+        Mazen (GitHub)
+      </a>
+    </p>
+    <p>All Rights Reserved © 2025</p>
+  </footer>
+
+</body>
 </html>
