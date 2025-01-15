@@ -1,0 +1,172 @@
+/* Import Cabin from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cabin&display=swap');
+
+/* 1) RESET & BASICS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html, body {
+    height: 100%;
+    /* Use Cabin for all text */
+    font-family: 'Cabin', sans-serif;
+    background-color: #ffffff;
+    color: #ffffff;
+}
+
+/* 2) HEADER */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+}
+
+/* Logo */
+.logo-area img {
+    height: 60px;
+    width: auto;
+}
+
+/* Navigation links */
+.nav-links a {
+    margin-left: 2rem;
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+    font-size: 1.2rem;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* 3) HERO SECTION */
+.hero-section {
+    position: relative;
+    background-color: #0A192F;
+    height: 80vh;
+    padding: 3rem 2rem;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    background-image: url("/static/img/waves.png");
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Hero text content */
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin-right: 2rem;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    line-height: 1.8;
+    color: #ffffff;
+    margin-bottom: 2.5rem;
+    max-width: 100%;
+}
+
+/* Primary button */
+.btn-primary {
+    display: inline-block;
+    background-color: #4C9EE3;
+    color: #ffffff;
+    padding: 2.4rem 3.2rem;
+    font-size: 1.9rem;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #3A8CCB;
+    transform: scale(1.05);
+}
+
+/* Right illustration */
+.hero-illustration {
+    position: absolute;
+    right: 2rem;
+    bottom: 0;
+    z-index: 1;
+}
+
+.hero-illustration img {
+    width: 800px;
+    height: auto;
+}
+
+/* 4) QUOTE SECTION */
+.quote-section {
+    background-color: #1b262c;
+    padding: 2rem;
+    text-align: center;
+    color: #ffffff;
+}
+
+.quote-section blockquote {
+    max-width: 800px;
+    margin: 0 auto;
+    font-style: italic;
+    font-size: 1.2rem;
+    line-height: 1.5;
+}
+
+/* 5) FOOTER */
+.site-footer {
+    background-color: #1b262c;
+    text-align: center;
+    color: #ffffff;
+    padding: 1rem;
+    font-size: 1rem;
+}
+
+/* 6) RESPONSIVE (MOBILE) BREAKPOINT */
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+        height: auto;
+    }
+
+    .hero-content {
+        margin-right: 0;
+        margin-bottom: 2rem;
+        max-width: 100%;
+    }
+
+    .hero-illustration {
+        position: static;
+        margin: 0 auto;
+    }
+
+    .hero-illustration img {
+        width: 300px;
+        margin: 0 auto;
+    }
+
+    .btn-primary {
+        padding: 1.5rem 2rem;
+        font-size: 1.4rem;
+    }
+
+    .nav-links {
+        display: none;
+    }
+}
