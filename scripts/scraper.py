@@ -25,7 +25,7 @@ def scrape(rss_url):
         forbes_count = 0
 
         for item in items:
-            if forbes_count == 1:
+            if forbes_count == 2:
                 break
             title = item.find("title").text
             redirect_link = item.find("link").text
