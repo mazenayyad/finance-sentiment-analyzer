@@ -2,61 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Finance Sentiment Analyzer</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/fsalogo.png') }}">
+  <title>Finance Sentiment Tracker</title>
+
+  <!-- Import "Cabin" from Google Fonts for consistent typography -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Link to main stylesheet in the static folder -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+  <!-- Favicon referencing fsalogo.png -->
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/fsalogo.png') }}" type="image/png">
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="site-header">
-    <div class="logo-area">
-      <img 
-        src="{{ url_for('static', filename='img/fsalogo.png') }}"
-        alt="Logo"
-        class="logo"
-      />
+  <!-- =========================
+       HEADER / NAV BAR
+       Includes a logo and basic nav links
+  ========================= -->
+  <header class="navbar">
+    <div class="navbar-content">
+      <!-- Left side: Logo container -->
+      <div class="logo-container">
+        <img 
+          src="{{ url_for('static', filename='img/fsalogo.png') }}" 
+          alt="Logo" 
+          class="logo" 
+        />
+      </div>
+      <!-- Right side: Nav links -->
+      <ul class="nav-links">
+        <li><a href=#>Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
     </div>
-    <nav class="nav-links">
-      <a href="#">About</a>
-      <a href="#">Contact</a>
-    </nav>
   </header>
 
-  <!-- Hero -->
+  <!-- =========================
+       HERO SECTION
+       Showcases the main heading, short description, and a button
+  ========================= -->
   <section class="hero-section">
     <div class="hero-content">
-      <h1 class="hero-title">Finance Sentiment Analyzer</h1>
-      <p class="hero-subtitle">
-        Stay on top of market trends with real-time data and AI-driven insights.
-        <br><br>
-        Our tracker scours reputable finance sources, condenses articles into quick reads, and 
-        displays the overall sentiment—helping you make more informed decisions.
-      </p>
-      <a href="#" class="btn-primary">Results</a>
-    </div>
-
-    <div class="hero-illustration">
-      <img 
-        src="{{ url_for('static', filename='img/illustration.png') }}"
-        alt="Hero Illustration"
-      />
+      <div class="hero-text">
+        <h1>Finance Sentiment Tracker</h1>
+        <p class="subtitle">
+          Stay on top of market trends with real-time data and AI-driven insights.
+        </p>
+        <p class="description">
+          Our tracker scours reputable finance sources, condenses articles into quick reads,
+          and displays the overall sentiment—helping you make more informed decisions.
+        </p>
+        <!-- Button routes to /results in Flask -->
+        <a class="hero-button" href="{{ url_for('results') }}">
+          Results
+        </a>
+      </div>
+      <div class="hero-illustration">
+        <!-- Illustration displayed on the right side of the hero -->
+        <img 
+          src="{{ url_for('static', filename='img/illustration.png') }}" 
+          alt="Finance Illustration"
+        />
+      </div>
     </div>
   </section>
 
-  <!-- Quote -->
-  <section class="quote-section">
-    <blockquote>
-      “In a market where Bitcoin never sleeps, data-driven sentiment turns noise into insight—
-       helping you navigate volatility with confidence.”
+  <!-- =========================
+       BELOW-HERO SECTION
+       Displays a quote on a dark background
+  ========================= -->
+  <section class="below-hero">
+    <blockquote class="quote">
+      “In a market where Bitcoin never sleeps, data-driven sentiment turns noise into insight—helping you navigate volatility with confidence.”
     </blockquote>
   </section>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <p>
-      Developed by
-      <a href="https://github.com/mazenayyad" target="_blank" style="color: inherit; text-decoration: underline;">
+  <!-- =========================
+       FOOTER
+       Developer credit and year
+  ========================= -->
+  <footer class="footer">
+    <p>Developed by 
+      <a 
+        href="https://github.com/mazenayyad" 
+        target="_blank" 
+        rel="noopener noreferrer"
+      >
         Mazen (GitHub)
       </a>
     </p>
