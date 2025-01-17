@@ -1,172 +1,178 @@
-/* Import Cabin from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cabin&display=swap');
-
-/* 1) RESET & BASICS */
+/* =========================
+   1) RESET & GLOBAL
+   - Remove default margins/padding
+   - Set box-sizing for predictable layouts
+========================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-html, body {
-    height: 100%;
-    /* Use Cabin for all text */
-    font-family: 'Cabin', sans-serif;
+  }
+  
+  /* 
+     Use the "Cabin" font family throughout
+     Set a white page background and default black text
+  */
+  body {
+    font-family: "Cabin", sans-serif;
     background-color: #ffffff;
-    color: #ffffff;
-}
-
-/* 2) HEADER */
-.site-header {
+    color: #000000;
+    line-height: 1.5;
+  }
+  
+  /* =========================
+     2) NAV BAR / HEADER
+     - White background, subtle border
+     - Logo on the left, links on the right
+  ========================= */
+  .navbar {
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #eee;
+  }
+  .navbar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 65px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #ffffff;
-    padding: 1rem 2rem;
-}
-
-/* Logo */
-.logo-area img {
-    height: 60px;
-    width: auto;
-}
-
-/* Navigation links */
-.nav-links a {
-    margin-left: 2rem;
-    text-decoration: none;
-    color: #000;
-    font-weight: 500;
-    font-size: 1.2rem;
-}
-
-.nav-links a:hover {
-    text-decoration: underline;
-}
-
-/* 3) HERO SECTION */
-.hero-section {
-    position: relative;
-    background-color: #0A192F;
-    height: 80vh;
-    padding: 3rem 2rem;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-start;
-    background-image: url("/static/img/waves.png");
-    background-position: left center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-/* Hero text content */
-.hero-content {
-    position: relative;
-    z-index: 1;
-    max-width: 600px;
-    margin-right: 2rem;
-}
-
-.hero-title {
-    font-size: 3.5rem;
-    font-weight: 600;
-    color: #ffffff;
-    margin-bottom: 1.5rem;
-}
-
-.hero-subtitle {
-    font-size: 1.5rem;
-    line-height: 1.8;
-    color: #ffffff;
-    margin-bottom: 2.5rem;
-    max-width: 100%;
-}
-
-/* Primary button */
-.btn-primary {
-    display: inline-block;
-    background-color: #4C9EE3;
-    color: #ffffff;
-    padding: 2.4rem 3.2rem;
-    font-size: 1.9rem;
-    font-weight: 700;
-    border-radius: 12px;
-    text-decoration: none;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.btn-primary:hover {
-    background-color: #3A8CCB;
-    transform: scale(1.05);
-}
-
-/* Right illustration */
-.hero-illustration {
-    position: absolute;
-    right: 2rem;
-    bottom: 0;
-    z-index: 1;
-}
-
-.hero-illustration img {
-    width: 800px;
+    padding: 0 1rem;
+  }
+  .logo-container .logo {
+    width: 40px;
     height: auto;
-}
-
-/* 4) QUOTE SECTION */
-.quote-section {
-    background-color: #1b262c;
-    padding: 2rem;
-    text-align: center;
-    color: #ffffff;
-}
-
-.quote-section blockquote {
-    max-width: 800px;
+  }
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: #1E1E1E;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+  }
+  .nav-links a:hover {
+    opacity: 0.7;
+  }
+  
+  /* =========================
+     3) HERO SECTION
+     - Wave background image
+     - Short minimal height for a compact layout
+  ========================= */
+  .hero-section {
+    position: relative;
+    background: url("img/waves.png") no-repeat center / cover;
+    min-height: 350px; 
+    color: #ffffff; /* White text in hero */
+  }
+  .hero-content {
+    max-width: 1200px;
     margin: 0 auto;
-    font-style: italic;
-    font-size: 1.2rem;
-    line-height: 1.5;
-}
-
-/* 5) FOOTER */
-.site-footer {
-    background-color: #1b262c;
-    text-align: center;
-    color: #ffffff;
-    padding: 1rem;
+    padding: 0rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    position: relative;
+    z-index: 2; /* Ensures content is on top of any background image layer */
+  }
+  
+  /* ========== HERO TEXT ========== 
+     Slightly smaller, bolder heading to match a Figma style
+  */
+  .hero-text {
+    flex: 1 1 450px;
+    margin-right: 2rem;
+  }
+  .hero-text h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .subtitle {
     font-size: 1rem;
-}
-
-/* 6) RESPONSIVE (MOBILE) BREAKPOINT */
-@media (max-width: 768px) {
-    .hero-section {
-        flex-direction: column;
-        text-align: center;
-        height: auto;
-    }
-
-    .hero-content {
-        margin-right: 0;
-        margin-bottom: 2rem;
-        max-width: 100%;
-    }
-
-    .hero-illustration {
-        position: static;
-        margin: 0 auto;
-    }
-
-    .hero-illustration img {
-        width: 300px;
-        margin: 0 auto;
-    }
-
-    .btn-primary {
-        padding: 1.5rem 2rem;
-        font-size: 1.4rem;
-    }
-
-    .nav-links {
-        display: none;
-    }
-}
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .description {
+    font-size: 1rem;
+    line-height: 1.5;
+    max-width: 450px;
+  }
+  
+  /* ========== BUTTON ========== 
+     Blue CTA with a hover effect
+  */
+  .hero-button {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.9rem 2rem;
+    background-color: #3282B8; /* Primary blue */
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  .hero-button:hover {
+    background-color: #266894;
+  }
+  
+  /* ========== ILLUSTRATION ========== 
+     Right side image set to a fixed width for emphasis
+  */
+  .hero-illustration {
+    flex: 1 1 400px;
+    display: flex;
+    justify-content: center;
+    margin-top: 0rem;
+  }
+  .hero-illustration img {
+    width: 500px;      /* Force a 500px width */
+    max-width: 100%;   /* Responsive fallback */
+    height: auto;
+  }
+  
+  /* =========================
+     4) BELOW-HERO SECTION
+     - Dark background with a quote
+  ========================= */
+  .below-hero {
+    background-color: #1B262C;
+    padding: 2rem 0rem;
+    text-align: center;
+  }
+  .quote {
+    color: #ffffff;
+    font-size: 1rem;
+    margin: 0 auto;
+    line-height: 1;
+  }
+  
+  /* =========================
+     5) FOOTER
+     - Dark background, smaller text
+     - Link styling to avoid blue/underline
+  ========================= */
+  .footer {
+    background-color: #1B262C;
+    font-size: 0.8rem;
+    color: #ffffff;
+    text-align: center;
+    padding: 0rem;
+  }
+  .footer p {
+    margin: 0rem 0;
+  }
+  
+  .footer a {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+  .footer a:hover {
+    text-decoration: underline;
+  }
+  
