@@ -53,3 +53,28 @@ def fetch_all_articles():
             "sentiment_label": row[5]
         })
     return articles
+
+def fetch_articles_by_date(day_str):
+    conn = sqlite3.connect("articles.db")
+    c = conn.cursor()
+
+    c.execute("""
+        SELECT * FROM articles
+        WHERE publish_date = ?
+        ORDER BY id DESC
+    """, (day_str,)) # (day_str,) is a tuple containing 1 element: day_str
+    rows = c.fetchall() # rows -> each row is a tuple. so list of tuples
+    conn.close()
+    
+    # convert each tuple to a dict
+    articles = []
+    for row in rows:
+        articles.append({
+            "id": row[0],
+            "title": row[1],
+            "publish_date": row[2],
+            "summary": row[3],
+            "sentiment_score": row[4],
+            "sentiment_label": row[5]
+        })
+    return articles
