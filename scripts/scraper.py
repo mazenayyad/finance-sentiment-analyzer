@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+from database import article_exists, insert_articles
 
 load_dotenv()
 
@@ -28,9 +29,12 @@ def scrape(rss_url):
             if forbes_count == 2:
                 break
             title = item.find("title").text
+            source_text = item.find("source").text
+            if article_exists(title, source_text):
+                continue
             redirect_link = item.find("link").text
             clean_title = title.split(" - ")[0]
-            source_text = item.find("source").text
+            pub_date = 0
             if 'forbes' in source_text.lower():
                 url = get_final_url(redirect_link, "forbes.com")
                 if url == "": # if there was an exception, go to the next 
@@ -39,6 +43,7 @@ def scrape(rss_url):
                 content = forbes_scraper(url)
                 article_dict = {
                     "title": clean_title,
+                    "source": source_text,
                     "final_url": url,
                     "content": content
                 }
