@@ -22,15 +22,15 @@ def init_db():
     conn.commit()
     conn.close()
 
-def insert_articles(title, publish_date, summary, sentiment_score, sentiment_label):
+def insert_articles(title, source, publish_date, summary, sentiment_score, sentiment_label):
     conn = sqlite3.connect("articles.db")
     c = conn.cursor()
 
     # list columns to fill. VALUES = placeholders
     c.execute("""
-        INSERT INTO articles (title, publish_date, summary, sentiment_score, sentiment_label)
+        INSERT INTO articles (title, source, publish_date, summary, sentiment_score, sentiment_label)
         VALUES (?, ?, ?, ?, ?)
-    """, (title, publish_date, summary, sentiment_score, sentiment_label))
+    """, (title, source, publish_date, summary, sentiment_score, sentiment_label))
 
     conn.commit()
     conn.close()
@@ -48,10 +48,11 @@ def fetch_all_articles():
         articles.append({
             "id": row[0],
             "title": row[1],
-            "publish_date": row[2],
-            "summary": row[3],
-            "sentiment_score": row[4],
-            "sentiment_label": row[5]
+            "source": row[2],
+            "publish_date": row[3],
+            "summary": row[4],
+            "sentiment_score": row[5],
+            "sentiment_label": row[6]
         })
     return articles
 
@@ -73,10 +74,11 @@ def fetch_articles_by_date(day_str):
         articles.append({
             "id": row[0],
             "title": row[1],
-            "publish_date": row[2],
-            "summary": row[3],
-            "sentiment_score": row[4],
-            "sentiment_label": row[5]
+            "source": row[2],
+            "publish_date": row[3],
+            "summary": row[4],
+            "sentiment_score": row[5],
+            "sentiment_label": row[6]
         })
     return articles
 
