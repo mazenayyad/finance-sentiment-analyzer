@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 from database import article_exists, insert_articles
+from datetime import datetime
 
 load_dotenv()
 
@@ -34,7 +35,9 @@ def scrape(rss_url):
                 continue
             redirect_link = item.find("link").text
             clean_title = title.split(" - ")[0]
-            pub_date = 0
+            pub_date = item.find("pubDate")
+            pub_date_str = pub_date.text
+            parsed_pub_date = parse_pubdate(pub_date_str)
             if 'forbes' in source_text.lower():
                 url = get_final_url(redirect_link, "forbes.com")
                 if url == "": # if there was an exception, go to the next 
@@ -44,6 +47,7 @@ def scrape(rss_url):
                 article_dict = {
                     "title": clean_title,
                     "source": source_text,
+                    "pub_date": parsed_pub_date,
                     "final_url": url,
                     "content": content
                 }
@@ -92,6 +96,12 @@ def get_final_url(redirect_url, contains):
         driver.quit()
 
     return final_url
+
+def parse_pubdate(pubdate):
+    dt = datetime.strptime(pubdate, "%a, %d %b %Y %H:%M:%S GMT") # convert to datetime object
+    just_date = dt.date() # strips off time, leaving only date
+    return just_date.isoformat() # YYYY-MM-DD
+
 
 def forbes_scraper(url):
     # return content which is a string
