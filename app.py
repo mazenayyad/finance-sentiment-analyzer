@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from scripts.scraper import scrape
 from scripts.analysis import init_models, summarize_text, analyze_sentiment, aggregate_numeric_scores
+from database import insert_articles
 
 BITCOIN_RSS_URL = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
 
@@ -33,6 +34,18 @@ def results():
     # perform sentiment analysis
     analyzed_articles = analyze_sentiment(articles)
     agg_label, agg_score = aggregate_numeric_scores(analyzed_articles)
+
+    # insert new articles in database
+    for article in articles:
+        insert_articles(
+            title=article["title"],
+            source=article["source"],
+            final_url=article["final_url"],
+            publish_date=0,
+            summary=article["summary"],
+            sentiment_score=article["sentiment_score"],
+            sentiment_label=article["sentiment_label"]
+        )
 
     return render_template("results.html", articles=analyzed_articles, agg_label=agg_label, agg_score=agg_score)
 
