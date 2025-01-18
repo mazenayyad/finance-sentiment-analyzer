@@ -40,8 +40,8 @@ def results():
         insert_articles(
             title=article["title"],
             source=article["source"],
+            publish_date=article["pub_date"],
             final_url=article["final_url"],
-            publish_date=0,
             summary=article["summary"],
             sentiment_score=article["sentiment_score"],
             sentiment_label=article["sentiment_label"]
