@@ -1,5 +1,4 @@
 import sqlite3
-from datetime import date
 
 DB_NAME = "articles.db"
 
@@ -13,6 +12,7 @@ def init_db():
             title TEXT,
             source TEXT,
             publish_date TEXT,
+            final_url TEXT,
             summary TEXT,
             sentiment_score REAL,
             sentiment_label TEXT
@@ -22,15 +22,15 @@ def init_db():
     conn.commit()
     conn.close()
 
-def insert_articles(title, source, publish_date, summary, sentiment_score, sentiment_label):
+def insert_articles(title, source, publish_date, final_url, summary, sentiment_score, sentiment_label):
     conn = sqlite3.connect("articles.db")
     c = conn.cursor()
 
     # list columns to fill. VALUES = placeholders
     c.execute("""
-        INSERT INTO articles (title, source, publish_date, summary, sentiment_score, sentiment_label)
-        VALUES (?, ?, ?, ?, ?)
-    """, (title, source, publish_date, summary, sentiment_score, sentiment_label))
+        INSERT INTO articles (title, source, publish_date, final_url, summary, sentiment_score, sentiment_label)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (title, source, publish_date, final_url, summary, sentiment_score, sentiment_label))
 
     conn.commit()
     conn.close()
@@ -50,9 +50,10 @@ def fetch_all_articles():
             "title": row[1],
             "source": row[2],
             "publish_date": row[3],
-            "summary": row[4],
-            "sentiment_score": row[5],
-            "sentiment_label": row[6]
+            "final_url": row[4],
+            "summary": row[5],
+            "sentiment_score": row[6],
+            "sentiment_label": row[7]
         })
     return articles
 
@@ -76,9 +77,10 @@ def fetch_articles_by_date(day_str):
             "title": row[1],
             "source": row[2],
             "publish_date": row[3],
-            "summary": row[4],
-            "sentiment_score": row[5],
-            "sentiment_label": row[6]
+            "final_url": row[4],
+            "summary": row[5],
+            "sentiment_score": row[6],
+            "sentiment_label": row[7]
         })
     return articles
 
