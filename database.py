@@ -11,6 +11,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS articles (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
+            source TEXT,
             publish_date TEXT,
             summary TEXT,
             sentiment_score REAL,
@@ -78,3 +79,18 @@ def fetch_articles_by_date(day_str):
             "sentiment_label": row[5]
         })
     return articles
+
+def article_exists(title, source):
+    conn = sqlite3.connect("articles.db")
+    c = conn.cursor()
+
+    c.execute("""
+        SELECT id
+        FROM articles
+        WHERE title = ? AND source = ?
+    """, (title, source))
+
+    row = c.fetchone() # returns None if not found
+    conn.close()
+
+    return (row is not None)
