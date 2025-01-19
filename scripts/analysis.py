@@ -88,10 +88,10 @@ def aggregate_numeric_scores(articles):
 
     # decide overall label
     if avg_score > 0:
-        agg_label = "positive"
+        agg_label = "Positive"
     elif avg_score < 0:
-        agg_label = "negative"
+        agg_label = "Negative"
     else:
-        agg_label = "neutral"
+        agg_label = "Neutral"
 
     return agg_label, avg_score
