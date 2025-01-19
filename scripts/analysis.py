@@ -69,7 +69,7 @@ def analyze_sentiment(articles):
         # argmax to obtain the most likely class (negative neutral or positive)
         predicted_class = torch.argmax(probabilities, dim=1).item()
 
-        sentiment = ['neutral', 'positive', 'negative'][predicted_class]
+        sentiment = ['Neutral', 'Positive', 'Negative'][predicted_class]
         article["sentiment_label"] = sentiment # add sentiment to the article
 
     return articles
