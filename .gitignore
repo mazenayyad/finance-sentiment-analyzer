@@ -1,3 +1,4 @@
 .env
 __pycache__/
 testingstuff.py
+articles.db
