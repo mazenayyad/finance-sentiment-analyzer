@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
-from database import article_exists, insert_articles
+from database import article_exists
 from datetime import datetime
 
 load_dotenv()
@@ -31,10 +31,10 @@ def scrape(rss_url):
                 break
             title = item.find("title").text
             source_text = item.find("source").text
-            if article_exists(title, source_text):
+            clean_title = title.split(" - ")[0]
+            if article_exists(clean_title, source_text):
                 continue
             redirect_link = item.find("link").text
-            clean_title = title.split(" - ")[0]
             pub_date = item.find("pubDate")
             pub_date_str = pub_date.text
             parsed_pub_date = parse_pubdate(pub_date_str)
@@ -101,7 +101,6 @@ def parse_pubdate(pubdate):
     dt = datetime.strptime(pubdate, "%a, %d %b %Y %H:%M:%S GMT") # convert to datetime object
     just_date = dt.date() # strips off time, leaving only date
     return just_date.isoformat() # YYYY-MM-DD
-
 
 def forbes_scraper(url):
     # return content which is a string
