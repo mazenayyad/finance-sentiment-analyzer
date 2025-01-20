@@ -2,3 +2,5 @@
 __pycache__/
 testingstuff.py
 articles.db
+.DS_Store
+static/.DS_Store
