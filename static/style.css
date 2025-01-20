@@ -1,178 +1,253 @@
-/* =========================
-   1) RESET & GLOBAL
-   - Remove default margins/padding
-   - Set box-sizing for predictable layouts
-========================= */
+/* 1) RESET & GLOBAL */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* 
-     Use the "Cabin" font family throughout
-     Set a white page background and default black text
-  */
-  body {
-    font-family: "Cabin", sans-serif;
-    background-color: #ffffff;
-    color: #000000;
-    line-height: 1.5;
-  }
-  
-  /* =========================
-     2) NAV BAR / HEADER
-     - White background, subtle border
-     - Logo on the left, links on the right
-  ========================= */
-  .navbar {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base styling: dark body, Cabin font, black default text */
+body {
+  font-family: "Cabin", sans-serif;
+  background-color: #1B262C;
+  color: #000;
+  line-height: 1.5;
+}
+
+/* 2) NAV BAR / HEADER */
+.navbar {
+  width: 100%;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.navbar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+
+.logo-container .logo {
+  width: 40px;
+  height: auto;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #1E1E1E;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+.nav-links a:hover {
+  opacity: 0.7;
+}
+
+/* 3) HERO SECTION */
+.hero-section {
+  position: relative;
+  background: url("img/waves.png") no-repeat center / cover;
+  min-height: 350px;
+  color: #fff;
+}
+
+.hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-text {
+  flex: 1 1 450px;
+  margin-right: 2rem;
+}
+
+.hero-text h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 450px;
+}
+
+.hero-button {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.9rem 2rem;
+  background-color: #3282B8;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.hero-button:hover {
+  background-color: #266894;
+}
+
+.hero-illustration {
+  flex: 1 1 400px;
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+}
+
+.hero-illustration img {
+  width: 500px;
+  max-width: 100%;
+  height: auto;
+}
+
+/* 4) BELOW-HERO */
+.below-hero {
+  background-color: #1B262C;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.quote {
+  color: #fff;
+  font-size: 1rem;
+  margin: 0 auto;
+  line-height: 1;
+}
+
+/* 5) FOOTER */
+.footer {
+  background-color: #1B262C;
+  font-size: 0.8rem;
+  color: #fff;
+  text-align: center;
+  padding: 0;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* 6) RESULTS SECTION */
+.results-section {
+  background-color: #1B262C;
+  padding: 4rem 2rem;
+  margin-top: 2rem;
+  color: #fff;
+}
+
+.results-section h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.results-section p {
+  margin-bottom: 1.5rem;
+}
+
+/* Overall Sentiment: color-coded text */
+.overall-sentiment {
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 2rem;
+}
+
+.overall-sentiment.positive {
+  color: #28a745;
+}
+
+.overall-sentiment.negative {
+  color: #dc3545;
+}
+
+.overall-sentiment.neutral {
+  color: #6c757d;
+}
+
+.articles-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* ARTICLE CARD */
+.article-card {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  color: #1E1E1E;
+}
+
+.article-card h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.article-card p {
+  margin-bottom: 0.5rem;
+}
+
+/* Sentiment Badge: color-coded background, white text */
+.sentiment-badge {
+  display: inline-block;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.sentiment-badge.positive {
+  background-color: #28a745;
+}
+
+.sentiment-badge.negative {
+  background-color: #dc3545;
+}
+
+.sentiment-badge.neutral {
+  background-color: #6c757d;
+}
+
+/* 7) RESPONSIVE BREAKPOINTS */
+@media (max-width: 600px) {
+  .article-card {
     width: 100%;
-    background-color: #ffffff;
-    border-bottom: 1px solid #eee;
   }
-  .navbar-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    height: 65px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1rem;
-  }
-  .logo-container .logo {
-    width: 40px;
-    height: auto;
-  }
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
-  }
-  .nav-links a {
-    text-decoration: none;
-    color: #1E1E1E;
-    font-weight: 600;
-    transition: opacity 0.2s ease;
-  }
-  .nav-links a:hover {
-    opacity: 0.7;
-  }
-  
-  /* =========================
-     3) HERO SECTION
-     - Wave background image
-     - Short minimal height for a compact layout
-  ========================= */
-  .hero-section {
-    position: relative;
-    background: url("img/waves.png") no-repeat center / cover;
-    min-height: 350px; 
-    color: #ffffff; /* White text in hero */
-  }
-  .hero-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0rem 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    position: relative;
-    z-index: 2; /* Ensures content is on top of any background image layer */
-  }
-  
-  /* ========== HERO TEXT ========== 
-     Slightly smaller, bolder heading to match a Figma style
-  */
-  .hero-text {
-    flex: 1 1 450px;
-    margin-right: 2rem;
-  }
-  .hero-text h1 {
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-  .subtitle {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-  .description {
-    font-size: 1rem;
-    line-height: 1.5;
-    max-width: 450px;
-  }
-  
-  /* ========== BUTTON ========== 
-     Blue CTA with a hover effect
-  */
-  .hero-button {
-    display: inline-block;
-    margin-top: 1.5rem;
-    padding: 0.9rem 2rem;
-    background-color: #3282B8; /* Primary blue */
-    color: #ffffff;
-    text-decoration: none;
-    font-weight: 700;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-  }
-  .hero-button:hover {
-    background-color: #266894;
-  }
-  
-  /* ========== ILLUSTRATION ========== 
-     Right side image set to a fixed width for emphasis
-  */
-  .hero-illustration {
-    flex: 1 1 400px;
-    display: flex;
-    justify-content: center;
-    margin-top: 0rem;
-  }
-  .hero-illustration img {
-    width: 500px;      /* Force a 500px width */
-    max-width: 100%;   /* Responsive fallback */
-    height: auto;
-  }
-  
-  /* =========================
-     4) BELOW-HERO SECTION
-     - Dark background with a quote
-  ========================= */
-  .below-hero {
-    background-color: #1B262C;
-    padding: 2rem 0rem;
-    text-align: center;
-  }
-  .quote {
-    color: #ffffff;
-    font-size: 1rem;
-    margin: 0 auto;
-    line-height: 1;
-  }
-  
-  /* =========================
-     5) FOOTER
-     - Dark background, smaller text
-     - Link styling to avoid blue/underline
-  ========================= */
-  .footer {
-    background-color: #1B262C;
-    font-size: 0.8rem;
-    color: #ffffff;
-    text-align: center;
-    padding: 0rem;
-  }
-  .footer p {
-    margin: 0rem 0;
-  }
-  
-  .footer a {
-    color: #ffffff;
-    text-decoration: underline;
-  }
-  .footer a:hover {
-    text-decoration: underline;
-  }
-  
+}
