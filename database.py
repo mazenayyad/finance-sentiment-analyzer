@@ -11,7 +11,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
             source TEXT,
-            publish_date TEXT,
+            pub_date TEXT,
             final_url TEXT,
             summary TEXT,
             sentiment_score REAL,
@@ -22,15 +22,15 @@ def init_db():
     conn.commit()
     conn.close()
 
-def insert_articles(title, source, publish_date, final_url, summary, sentiment_score, sentiment_label):
+def insert_articles(title, source, pub_date, final_url, summary, sentiment_score, sentiment_label):
     conn = sqlite3.connect("articles.db")
     c = conn.cursor()
 
     # list columns to fill. VALUES = placeholders
     c.execute("""
-        INSERT INTO articles (title, source, publish_date, final_url, summary, sentiment_score, sentiment_label)
+        INSERT INTO articles (title, source, pub_date, final_url, summary, sentiment_score, sentiment_label)
         VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (title, source, publish_date, final_url, summary, sentiment_score, sentiment_label))
+    """, (title, source, pub_date, final_url, summary, sentiment_score, sentiment_label))
 
     conn.commit()
     conn.close()
@@ -49,7 +49,7 @@ def fetch_all_articles():
             "id": row[0],
             "title": row[1],
             "source": row[2],
-            "publish_date": row[3],
+            "pub_date": row[3],
             "final_url": row[4],
             "summary": row[5],
             "sentiment_score": row[6],
@@ -63,7 +63,7 @@ def fetch_articles_by_date(day_str):
 
     c.execute("""
         SELECT * FROM articles
-        WHERE publish_date = ?
+        WHERE pub_date = ?
         ORDER BY id DESC
     """, (day_str,)) # (day_str,) is a tuple containing 1 element: day_str
     rows = c.fetchall() # rows -> each row is a tuple. so list of tuples
@@ -76,7 +76,7 @@ def fetch_articles_by_date(day_str):
             "id": row[0],
             "title": row[1],
             "source": row[2],
-            "publish_date": row[3],
+            "pub_date": row[3],
             "final_url": row[4],
             "summary": row[5],
             "sentiment_score": row[6],

@@ -29,7 +29,7 @@ def results():
         insert_articles(
             title=article["title"],
             source=article["source"],
-            publish_date=article["pub_date"],
+            pub_date=article["pub_date"],
             final_url=article["final_url"],
             summary=article["summary"],
             sentiment_score=article["sentiment_score"],
