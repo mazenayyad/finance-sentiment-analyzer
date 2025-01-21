@@ -23,12 +23,7 @@ def scrape(rss_url):
         items = root.findall('.//item')
         articles = []
 
-        # TEMPORARY, REMOVE LATER
-        forbes_count = 0
-
         for item in items:
-            if forbes_count == 2:
-                break
             title = item.find("title").text
             source_text = item.find("source").text
             clean_title = title.split(" - ")[0]
@@ -58,21 +53,22 @@ def scrape(rss_url):
                     "content": content
                 }
                 articles.append(article_dict)
-                forbes_count += 1
-            # elif ('Yahoo Finance' == source_text):
-            #     url = get_final_url(redirect_link, "finance.yahoo.com")
-            #     if url == "":
-            #         continue
-            #     if "uk.finance.yahoo.com" in url.lower():
-            #         continue
+            elif ('Yahoo Finance' == source_text):
+                url = get_final_url(redirect_link, "finance.yahoo.com")
+                if url == "":
+                    continue
+                if "uk.finance.yahoo.com" in url.lower():
+                    continue
 
-            #     content = yahoo_scraper(url)
-            #     article_dict = {
-            #         "title": clean_title,
-            #         "final_url": url,
-            #         "content": content
-            #     }
-            #     articles.append(article_dict)
+                content = yahoo_scraper(url)
+                article_dict = {
+                    "title": clean_title,
+                    "source": source_text,
+                    "pub_date": parsed_pub_date,
+                    "final_url": url,
+                    "content": content
+                }
+                articles.append(article_dict)
             else:
                 continue
         return articles
