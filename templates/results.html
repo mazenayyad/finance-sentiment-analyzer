@@ -1,6 +1,97 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Finance Sentiment Analyzer</title>
-    </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Results - Finance Sentiment Tracker</title>
+
+  <!-- Import "Cabin" from Google Fonts for consistent typography -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Link to main stylesheet in the static folder -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+  <!-- Favicon referencing fsalogo.png -->
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/fsalogo.png') }}" type="image/png">    
+</head>
+<body>
+
+  <!-- =========================
+       HEADER / NAV BAR
+  ========================= -->
+  <header class="navbar">
+    <div class="navbar-content">
+      <div class="logo-container">
+        <img 
+          src="{{ url_for('static', filename='img/fsalogo.png') }}" 
+          alt="Logo" 
+          class="logo" 
+        />
+      </div>
+      <ul class="nav-links">
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="https://github.com/mazenayyad/finance-sentiment-analyzer/blob/main/README.md">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </header>   
+
+  <!-- =========================
+       RESULTS SECTION
+  ========================= -->
+  <section class="results-section">
+    <h1>Analyzed Articles</h1>
+
+    <!-- Color-coded overall sentiment text -->
+    <p class="overall-sentiment {{ agg_label|lower }}">
+      Overall Sentiment: {{ agg_label }} ({{ agg_score|round(0) }})
+    </p>
+
+    <div class="articles-container">
+      {% for article in articles %}
+        <div class="article-card">
+          <h2>{{ article.title }}</h2>
+          <p><strong>Date:</strong> {{ article.pub_date }}</p>
+          <p><strong>Source:</strong> {{ article.source }}</p>
+
+          <p>
+            <strong>Link:</strong>
+            <a href="{{ article.final_url }}" target="_blank" class="article-link">
+              Original Article
+            </a>
+          </p>
+
+          <!-- Article summary with more spacing -->
+          <p class="article-summary">{{ article.summary }}</p>
+
+          <!-- Sentiment badge -->
+          <span class="sentiment-badge {{ article.sentiment_label|lower }}">
+            {{ article.sentiment_label }} ({{ article.sentiment_score|round(0) }})
+          </span>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+  <footer class="footer">
+    <p>
+      Developed by 
+      <a 
+        href="https://github.com/mazenayyad" 
+        target="_blank" 
+        rel="noopener noreferrer"
+      >
+        Mazen (GitHub)
+      </a>
+    </p>
+    <p>All Rights Reserved © 2025</p>
+  </footer>
+
+</body>
 </html>
+
