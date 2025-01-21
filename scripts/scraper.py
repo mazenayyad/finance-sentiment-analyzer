@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 from database import article_exists
-from datetime import datetime
+from datetime import datetime, timedelta, date
 
 load_dotenv()
 
@@ -32,12 +32,18 @@ def scrape(rss_url):
             title = item.find("title").text
             source_text = item.find("source").text
             clean_title = title.split(" - ")[0]
+            pub_date = item.find("pubDate")
+            pub_date_str = pub_date.text
+            """
+            parsed_pub_date is a string value of isoformat date, dt_utc is datetime
+            dt_utc is datetime for comparison with datetime.utcnow().date()
+            """
+            parsed_pub_date, dt_utc = parse_pubdate(pub_date_str)
+            if dt_utc.date() != datetime.utcnow().date():
+                continue
             if article_exists(clean_title, source_text):
                 continue
             redirect_link = item.find("link").text
-            pub_date = item.find("pubDate")
-            pub_date_str = pub_date.text
-            parsed_pub_date = parse_pubdate(pub_date_str)
             if 'forbes' in source_text.lower():
                 url = get_final_url(redirect_link, "forbes.com")
                 if url == "": # if there was an exception, go to the next 
@@ -74,6 +80,12 @@ def scrape(rss_url):
         print (f'Failed to fetch RSS feed. HTTP Status Code: {response.status_code}')
         return []
     
+
+def parse_pubdate(pubdate):
+    dt_utc = datetime.strptime(pubdate, "%a, %d %b %Y %H:%M:%S GMT") # convert to datetime object
+    dt_utc_date = dt_utc.date() # strips off time, leaving only date
+    return dt_utc_date.isoformat(), dt_utc
+
 def get_final_url(redirect_url, contains):
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -96,11 +108,6 @@ def get_final_url(redirect_url, contains):
         driver.quit()
 
     return final_url
-
-def parse_pubdate(pubdate):
-    dt = datetime.strptime(pubdate, "%a, %d %b %Y %H:%M:%S GMT") # convert to datetime object
-    just_date = dt.date() # strips off time, leaving only date
-    return just_date.isoformat() # YYYY-MM-DD
 
 def forbes_scraper(url):
     # return content which is a string
