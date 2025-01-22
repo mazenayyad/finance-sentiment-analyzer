@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from scripts.scraper import scrape
 from scripts.analysis import init_models, summarize_text, analyze_sentiment, aggregate_numeric_scores
 from database import insert_articles, init_db, fetch_articles_by_date
-from datetime import date
+from datetime import date, datetime
 
 BITCOIN_RSS_URL = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
 
@@ -42,7 +42,9 @@ def results():
 
     agg_label, agg_score = aggregate_numeric_scores(todays_articles)
 
-    return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score)
+    last_updated = datetime.utcnow().strftime("%d %b, %Y %H:%M UTC")
+
+    return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated)
 
 if __name__ == "__main__":
     init_db()
