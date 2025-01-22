@@ -37,8 +37,8 @@ def results():
         )
 
     # fetch all articles from todays date
-    todays_str = date.today().isoformat()
-    todays_articles = fetch_articles_by_date(todays_str)
+    utc_today_str = datetime.utcnow().date().isoformat()
+    todays_articles = fetch_articles_by_date(utc_today_str)
 
     agg_label, agg_score = aggregate_numeric_scores(todays_articles)
 
