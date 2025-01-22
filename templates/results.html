@@ -18,9 +18,7 @@
 </head>
 <body>
 
-  <!-- =========================
-       HEADER / NAV BAR
-  ========================= -->
+  <!-- HEADER / NAV BAR -->
   <header class="navbar">
     <div class="navbar-content">
       <div class="logo-container">
@@ -38,23 +36,37 @@
     </div>
   </header>   
 
-  <!-- =========================
-       RESULTS SECTION
-  ========================= -->
+  <!-- RESULTS SECTION  -->
   <section class="results-section">
     <h1>Analyzed Articles</h1>
 
-    <!-- Color-coded overall sentiment text -->
+    <!-- Displays the last updated time dynamically from Flask -->
+    <p class="last-updated">
+      Last updated: {{ last_updated }}
+    </p>
+
+    <!-- Displays the overall sentiment -->
     <p class="overall-sentiment {{ agg_label|lower }}">
       Overall Sentiment: {{ agg_label }} ({{ agg_score|round(0) }})
     </p>
 
-    <div class="articles-container">
+    <p class="score-explanation">
+      The sentiment score ranges from -100 (very negative) to +100 (very positive).
+    </p>
+
+    <div class="articles-container" id="articles-container">
       {% for article in articles %}
-        <div class="article-card">
+        <div class="article-card" data-sentiment="{{ article.sentiment_label }}">
+          <!-- Card Header / Metadata Bar -->
+          <div class="card-header">
+            <p class="date-source">
+              <strong>Date:</strong> {{ article.pub_date }} 
+              &nbsp;|&nbsp; 
+              <strong>Source:</strong> {{ article.source }}
+            </p>
+          </div>
+
           <h2>{{ article.title }}</h2>
-          <p><strong>Date:</strong> {{ article.pub_date }}</p>
-          <p><strong>Source:</strong> {{ article.source }}</p>
 
           <p>
             <strong>Link:</strong>
@@ -63,7 +75,6 @@
             </a>
           </p>
 
-          <!-- Article summary with more spacing -->
           <p class="article-summary">{{ article.summary }}</p>
 
           <!-- Sentiment badge -->
@@ -73,11 +84,13 @@
         </div>
       {% endfor %}
     </div>
+
+    <!-- "Load More" button. Hidden by default, only shown if > 6 articles (2 rows). -->
+    <button class="load-more" id="loadMoreBtn" style="display: none;">Load More</button>
+
   </section>
 
-  <!-- =========================
-       FOOTER
-  ========================= -->
+  <!-- FOOTER  -->
   <footer class="footer">
     <p>
       Developed by 
@@ -92,6 +105,34 @@
     <p>All Rights Reserved © 2025</p>
   </footer>
 
+  <!-- Inline script for "Load More" button logic -->
+  <script>
+    (function() {
+      // max # of article-cards to display initially
+      const MAX_VISIBLE = 6; // ex: 2 rows if each row has 3 columns
+
+      const container = document.getElementById("articles-container");
+      const allCards = container.querySelectorAll(".article-card");
+      const loadMoreBtn = document.getElementById("loadMoreBtn");
+
+      // if we have more than MAX_VISIBLE articles, hide the extras
+      if (allCards.length > MAX_VISIBLE) {
+        // hide all beyond MAX_VISIBLE
+        for (let i = MAX_VISIBLE; i < allCards.length; i++) {
+          allCards[i].classList.add("hidden-card");
+        }
+        // show the load more button
+        loadMoreBtn.style.display = "inline-block";
+
+        loadMoreBtn.addEventListener("click", () => {
+          // reveal all hidden articles
+          for (let i = MAX_VISIBLE; i < allCards.length; i++) {
+            allCards[i].classList.remove("hidden-card");
+          }
+          loadMoreBtn.style.display = "none";
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
-
