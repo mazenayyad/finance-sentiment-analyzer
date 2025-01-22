@@ -70,6 +70,12 @@ def analyze_sentiment(articles):
         predicted_class = torch.argmax(probabilities, dim=1).item()
 
         sentiment = ['Neutral', 'Positive', 'Negative'][predicted_class]
+
+        if sentiment == 'Neutral':
+            if score > 15:
+                sentiment = 'Positive'
+            if score < -15:
+                sentiment = 'Negative'
         article["sentiment_label"] = sentiment # add sentiment to the article
 
     return articles
