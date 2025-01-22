@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 from database import article_exists
-from datetime import datetime, timedelta, date
+from datetime import datetime
 
 load_dotenv()
 
