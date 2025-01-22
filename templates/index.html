@@ -18,13 +18,9 @@
 </head>
 <body>
 
-  <!-- =========================
-       HEADER / NAV BAR
-       Includes a logo and basic nav links
-  ========================= -->
+  <!-- HEADER / NAV BAR -->
   <header class="navbar">
     <div class="navbar-content">
-      <!-- Left side: Logo container -->
       <div class="logo-container">
         <img 
           src="{{ url_for('static', filename='img/fsalogo.png') }}" 
@@ -32,19 +28,15 @@
           class="logo" 
         />
       </div>
-      <!-- Right side: Nav links -->
       <ul class="nav-links">
-        <li><a href=#>Home</a></li>
+        <li><a href="#">Home</a></li>
         <li><a href="https://github.com/mazenayyad/finance-sentiment-analyzer/blob/main/README.md">About</a></li>
         <li><a href="#">Contact</a></li>
       </ul>
     </div>
   </header>
 
-  <!-- =========================
-       HERO SECTION
-       Showcases the main heading, short description, and a button
-  ========================= -->
+  <!-- HERO SECTION -->
   <section class="hero-section">
     <div class="hero-content">
       <div class="hero-text">
@@ -56,13 +48,11 @@
           Our tracker scours reputable finance sources, condenses articles into quick reads,
           and displays the overall sentiment—helping you make more informed decisions.
         </p>
-        <!-- Button routes to /results in Flask -->
         <a class="hero-button" href="{{ url_for('results') }}">
           Results
         </a>
       </div>
       <div class="hero-illustration">
-        <!-- Illustration displayed on the right side of the hero -->
         <img 
           src="{{ url_for('static', filename='img/illustration.png') }}" 
           alt="Finance Illustration"
@@ -71,20 +61,14 @@
     </div>
   </section>
 
-  <!-- =========================
-       BELOW-HERO SECTION
-       Displays a quote on a dark background
-  ========================= -->
+  <!-- BELOW-HERO SECTION -->
   <section class="below-hero">
     <blockquote class="quote">
       “In a market where Bitcoin never sleeps, data-driven sentiment turns noise into insight—helping you navigate volatility with confidence.”
     </blockquote>
   </section>
 
-  <!-- =========================
-       FOOTER
-       Developer credit and year
-  ========================= -->
+  <!-- FOOTER -->
   <footer class="footer">
     <p>Developed by 
       <a 
