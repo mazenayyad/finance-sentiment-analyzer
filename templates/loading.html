@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title>
+  <style>
+    #spinner {
+      margin: 2rem auto;
+      width: 50px;
+      height: 50px;
+      border: 6px solid #ccc;
+      border-top: 6px solid #3282B8;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .centered {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #1B262C;
+      color: #fff;
+      height: 100vh;
+      justify-content: center;
+    }
+    body { margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="centered">
+    <div id="spinner"></div>
+    <p>Please wait while we analyze the articles...</p>
+  </div>
+
+  <script>
+    // check status every 2 seconds
+    setInterval(function() {
+      fetch("/check_status")
+        .then(resp => resp.text())
+        .then(responseText => {
+          if (responseText === "done") {
+            window.location.href = "/results";
+          }
+        });
+    }, 2000);
+  </script>
+</body>
+</html>

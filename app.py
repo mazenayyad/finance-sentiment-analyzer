@@ -2,9 +2,13 @@ from flask import Flask, render_template
 from scripts.scraper import scrape
 from scripts.analysis import init_models, summarize_text, analyze_sentiment, aggregate_numeric_scores
 from database import insert_articles, init_db, fetch_articles_by_date
-from datetime import date, datetime
+from datetime import datetime
+import threading
+import time
 
 BITCOIN_RSS_URL = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
+
+SCRAPE_DONE = False
 
 app = Flask(__name__)
 
@@ -12,9 +16,9 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
+def long_scrape():
+    global SCRAPE_DONE
 
-@app.route("/results")
-def results():
     articles = scrape(BITCOIN_RSS_URL)
 
     # summarize each article
@@ -36,6 +40,26 @@ def results():
             sentiment_label=article["sentiment_label"]
         )
 
+    SCRAPE_DONE = True
+
+@app.route("/loading")
+def loading():
+    global SCRAPE_DONE
+    SCRAPE_DONE = False
+    thread = threading.Thread(target=long_scrape)
+    thread.start()
+    return render_template("loading.html")
+
+@app.route("/check_status")
+def check_status():
+    global SCRAPE_DONE
+    if SCRAPE_DONE:
+        return "done"
+    else:
+        return "not done"
+
+@app.route("/results")
+def results():
     # fetch all articles from todays date
     utc_today_str = datetime.utcnow().date().isoformat()
     todays_articles = fetch_articles_by_date(utc_today_str)
