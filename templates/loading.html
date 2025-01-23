@@ -3,6 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <title>Loading...</title>
+
+  <!-- Import "Cabin" from Google Fonts for consistent typography -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Link to main stylesheet in the static folder -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+  <!-- Favicon referencing fsalogo.png -->
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/fsalogo.png') }}" type="image/png">
+  
   <style>
     #spinner {
       margin: 2rem auto;
