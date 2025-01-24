@@ -151,7 +151,8 @@ body {
 }
 
 .footer a {
-  color: #82caff;
+  color: #4daff0;
+  font-weight: bolder;
   text-decoration: none;
   transition: color 0.2s ease;
 }
