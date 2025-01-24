@@ -47,6 +47,15 @@
     <p>Please wait while we analyze the articles...</p>
   </div>
 
-  <script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+  <script>
+  setInterval(function() {
+    fetch("/check_status")
+      .then(resp => resp.text())
+      .then(responseText => {
+        if (responseText === "done") {
+          window.location.href = "/results";
+        }
+      });
+  }, 2000);  </script>
 </body>
 </html>
