@@ -242,10 +242,16 @@ body {
 
 .card-header {
   background: rgba(255, 255, 255, 0.06);
-  padding: 0.5rem;
+  padding: 0.75rem 1rem;  
   border-radius: 4px;
   margin-bottom: 1rem;
 }
+
+.card-header p {
+  margin: 0; 
+  line-height: 1.4;
+}
+
 
 .date-source {
   margin: 0;
@@ -254,10 +260,11 @@ body {
 }
 
 .article-card h2 {
+  
   font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #fff;
+  margin-bottom: 0.4rem;
+  color: #ffffff;
 }
 
 .article-link {
@@ -271,11 +278,31 @@ body {
   text-decoration: underline;
 }
 
-.article-summary {
+/* .article-summary {
   line-height: 1.7;
   font-size: 1.05rem;
   margin-bottom: 1rem;
+} */
+
+.ai-summary {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #2F2F2F;
+  border-left: 4px solid #3282B8;
+  border-radius: 4px;
 }
+.ai-summary h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+.ai-summary p {
+  margin: 0;
+  line-height: 1.5;
+  color: #fff;
+}
+
 
 .article-card[data-sentiment="Positive"] {
   border-left: 4px solid #28a745;
