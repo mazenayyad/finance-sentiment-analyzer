@@ -92,10 +92,12 @@ def aggregate_numeric_scores(articles):
 
     avg_score = total_score / len(articles)
 
+    rounded_score = int(round(avg_score))
+
     # decide overall label
-    if avg_score > 0:
+    if rounded_score > 0:
         agg_label = "Positive"
-    elif avg_score < 0:
+    elif rounded_score < 0:
         agg_label = "Negative"
     else:
         agg_label = "Neutral"
