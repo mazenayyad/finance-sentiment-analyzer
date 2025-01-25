@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime, timedelta
 
 DB_NAME = "articles.db"
 
@@ -16,6 +17,15 @@ def init_db():
             summary TEXT,
             sentiment_score REAL,
             sentiment_label TEXT
+        )
+    """)
+
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS finance_daily (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date_str TEXT NOT NULL UNIQUE,
+            avg_sentiment REAL,
+            btc_price REAL
         )
     """)
 
@@ -98,3 +108,38 @@ def article_exists(title, source):
     conn.close()
 
     return (row is not None)
+
+def store_daily_aggregate(date_str, avg_sentiment, btc_price):
+    conn = sqlite3.connect("finance_daily")
+    c = conn.cursor()
+
+    c.execute("""
+        INSERT INTO finance_daily (date_str, avg_sentiment, btc_price)
+        VALUES (?, ?, ?)
+    """, (date_str, avg_sentiment, btc_price))
+
+    conn.commit()
+    conn.close()
+
+def fetch_finance_daily(limit_days=30):
+    conn = sqlite3.connect("finance_daily")
+    c = conn.cursor()
+
+    c.execute("""
+        SELECT date_str, avg_sentiment, btc_price
+        FROM finance_daily
+        ORDER BY date_str ASC
+        LIMIT ?
+    """, (limit_days,))
+
+    rows = c.fetchall()
+    conn.close()
+
+    data = []
+    for row in rows:
+        data.append({
+            "date_str": row[0],
+            "avg_sentiment": row[1],
+            "btc_price": row[2]
+        })
+    return data
