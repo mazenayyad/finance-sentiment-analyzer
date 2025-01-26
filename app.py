@@ -73,7 +73,7 @@ def results():
     daily_data = fetch_finance_daily()
 
     if not daily_data:
-        chart_html = "<p>No historical data available yet.</p>"
+        chart_html = ""
     else:
         # convert daily data to a pandas dataframe
         df = pd.DataFrame(daily_data)
@@ -106,8 +106,10 @@ def results():
 
         # customizing layout and axis
         fig.update_layout(
+            template="plotly_dark",
             title = "Daily Sentiment vs. BTC Price - (Last 30 days)",
-            hovermode = "x unified"
+            hovermode = "x unified",
+            font = {"color": "#ffffff"}
         )
 
         # sentiment - primary y-axis
@@ -128,7 +130,7 @@ def results():
         # convert to html snippet. returns only the div and script for the chart, not a full HTML document
         chart_html = fig.to_html(full_html=False)
 
-    return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated, chart_html=chart_html)
+    return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated, daily_data=daily_data, chart_html=chart_html)
 
 if __name__ == "__main__":
     init_db()

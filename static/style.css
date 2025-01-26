@@ -369,3 +369,30 @@ body {
   box-shadow: 0 5px 10px rgba(0,0,0,0.4);
 }
 
+.chart-section {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+}
+
+.chart-section h2 {
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.no-history-message {
+  background-color: #444;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  text-align: center;
+  max-width: 600px;
+  margin: 2rem auto 0;
+  font-weight: 600;
+}
+
+.no-history-message p {
+  margin: 0;  
+  font-size: 1rem;
+  line-height: 1.5;
+}

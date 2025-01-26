@@ -102,9 +102,15 @@
 
   <!-- chart_html snippet -->
   <section class="chart-section">
-    <h2>Daily BTC Price vs. Sentiment</h2>
-    <!-- safe to not display the tags <div> and <script> as literal text. to allow the script to execute and the div to render the chart -->
-    {{ chart_html|safe }}
+    <h2>Chart: Daily BTC Price vs. Sentiment</h2>
+    {% if daily_data|length == 0 %}
+      <div class="no-history-message">
+        <p>No historical data available yet. Please check back tomorrow.</p>
+      </div>
+    {% else %}
+      <!-- safe to not display the tags <div> and <script> as literal text. to allow the script to execute and the div to render the chart -->
+      {{ chart_html|safe }}
+    {% endif %}
   </section>
 
   <!-- FOOTER  -->
