@@ -97,6 +97,16 @@
 
   </section>
 
+  <!-- Load plotly from a CDN. Loads Plotly.js in the browser -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+  <!-- chart_html snippet -->
+  <section class="chart-section">
+    <h2>Daily BTC Price vs. Sentiment</h2>
+    <!-- safe to not display the tags <div> and <script> as literal text. to allow the script to execute and the div to render the chart -->
+    {{ chart_html|safe }}
+  </section>
+
   <!-- FOOTER  -->
   <footer class="footer">
     <p>

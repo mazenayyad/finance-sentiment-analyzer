@@ -1,10 +1,12 @@
 from flask import Flask, render_template
 from scripts.scraper import scrape
 from scripts.analysis import init_models, summarize_text, analyze_sentiment, aggregate_numeric_scores
-from database import insert_articles, init_db, fetch_articles_by_date
+from database import insert_articles, init_db, fetch_articles_by_date, fetch_finance_daily
 from datetime import datetime
 import threading
-import time
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import pandas as pd
 
 BITCOIN_RSS_URL = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
 
@@ -68,7 +70,65 @@ def results():
 
     last_updated = datetime.utcnow().strftime("%d %b, %Y %H:%M UTC")
 
-    return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated)
+    daily_data = fetch_finance_daily()
+
+    if not daily_data:
+        chart_error_html = "<p>No historical data available yet.</p>"
+    else:
+        # convert daily data to a pandas dataframe
+        df = pd.DataFrame(daily_data)
+
+        # creating a figure with secondary y-axis
+        fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+        # primary y-axis (avg sentiment)
+        fig.add_trace(
+            go.Scatter(
+            x = df["date_str"],
+            y = df["avg_sentiment"],
+            name = "Average Sentiment",
+            mode = "lines+markers"
+            ),
+            secondary_y = False
+        )
+
+        # seconday y-axis (btc price)
+        fig.add_trace(
+            go.Scatter(
+            x = df["date_str"],
+            y = df["btc_price"],
+            name = "Bitcoin Price (USD)",
+            mode = "lines+markers",
+            line_color = "orange"
+            ),
+            secondary_y = True
+        )
+
+        # customizing layout and axis
+        fig.update_layout(
+            title = "Daily Sentiment vs. BTC Price - (Last 30 days)",
+            hovermode = "x unified"
+        )
+
+        # sentiment - primary y-axis
+        fig.update_yaxes(
+            title_text = "Average Sentiment (-100 to 100)",
+            range = [-100, 100], # fixed range
+            secondary_y = False
+        )
+
+        # btc price - secondary y-axis
+        fig.update_yaxes(
+            title_text = "BTC Price (USD)",
+            secondary_y = True
+        )
+
+        fig.update_xaxes(title_text="Date")
+
+        # convert to html snippet. returns only the div and script for the chart, not a full HTML document
+        chart_html = fig.to_html(full_html=False)
+
+    return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated, chart_html=chart_html)
 
 if __name__ == "__main__":
     init_db()
