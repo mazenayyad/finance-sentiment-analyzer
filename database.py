@@ -1,10 +1,8 @@
 import sqlite3
 from datetime import datetime, timedelta
 
-DB_NAME = "articles.db"
-
 def init_db():
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect("finance.db")
     c = conn.cursor()
 
     c.execute("""
@@ -28,12 +26,11 @@ def init_db():
             btc_price REAL
         )
     """)
-
     conn.commit()
     conn.close()
 
 def insert_articles(title, source, pub_date, final_url, summary, sentiment_score, sentiment_label):
-    conn = sqlite3.connect("articles.db")
+    conn = sqlite3.connect("finance.db")
     c = conn.cursor()
 
     # list columns to fill. VALUES = placeholders
@@ -46,7 +43,7 @@ def insert_articles(title, source, pub_date, final_url, summary, sentiment_score
     conn.close()
 
 def fetch_all_articles():
-    conn = sqlite3.connect("articles.db")
+    conn = sqlite3.connect("finance.db")
     c = conn.cursor()
 
     c.execute("SELECT * FROM articles ORDER BY id DESC")
@@ -68,7 +65,7 @@ def fetch_all_articles():
     return articles
 
 def fetch_articles_by_date(day_str):
-    conn = sqlite3.connect("articles.db")
+    conn = sqlite3.connect("finance.db")
     c = conn.cursor()
 
     c.execute("""
@@ -95,7 +92,7 @@ def fetch_articles_by_date(day_str):
     return articles
 
 def article_exists(title, source):
-    conn = sqlite3.connect("articles.db")
+    conn = sqlite3.connect("finance.db")
     c = conn.cursor()
 
     c.execute("""
@@ -110,7 +107,7 @@ def article_exists(title, source):
     return (row is not None)
 
 def store_daily_aggregate(date_str, avg_sentiment, btc_price):
-    conn = sqlite3.connect("finance_daily")
+    conn = sqlite3.connect("finance.db")
     c = conn.cursor()
 
     c.execute("""
@@ -122,7 +119,7 @@ def store_daily_aggregate(date_str, avg_sentiment, btc_price):
     conn.close()
 
 def fetch_finance_daily(limit_days=30):
-    conn = sqlite3.connect("finance_daily")
+    conn = sqlite3.connect("finance.db")
     c = conn.cursor()
 
     c.execute("""
