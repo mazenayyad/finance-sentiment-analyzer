@@ -73,7 +73,7 @@ def results():
     daily_data = fetch_finance_daily()
 
     if not daily_data:
-        chart_error_html = "<p>No historical data available yet.</p>"
+        chart_html = "<p>No historical data available yet.</p>"
     else:
         # convert daily data to a pandas dataframe
         df = pd.DataFrame(daily_data)
