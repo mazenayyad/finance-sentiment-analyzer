@@ -125,12 +125,15 @@ def fetch_finance_daily(limit_days=30):
     c.execute("""
         SELECT date_str, avg_sentiment, btc_price
         FROM finance_daily
-        ORDER BY date_str ASC
+        ORDER BY date_str DESC
         LIMIT ?
     """, (limit_days,))
 
     rows = c.fetchall()
     conn.close()
+
+    # rows will be from newest to oldest. so we reverse them to get oldest -> newest
+    rows.reverse()
 
     data = []
     for row in rows:
