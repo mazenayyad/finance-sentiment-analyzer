@@ -2,11 +2,40 @@ from flask import Flask, render_template
 from scripts.scraper import scrape
 from scripts.analysis import init_models, summarize_text, analyze_sentiment, aggregate_numeric_scores
 from database import insert_articles, init_db, fetch_articles_by_date, fetch_finance_daily
-from datetime import datetime
+from datetime import datetime, timedelta
 import threading
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import pandas as pd
+import time
+from scripts.aggregator import aggregate_daily_data
+
+LAST_AGGREGATED_DATE = None
+
+def daily_aggregator_thread():
+    global LAST_AGGREGATED_DATE
+
+    while True:
+        current_date = datetime.utcnow().date()
+
+        # on the first run, just set LAST_AGGREGATED_DATE to current_date. to not aggregate yesterday's data on the first run
+        if LAST_AGGREGATED_DATE is None:
+            LAST_AGGREGATED_DATE = current_date
+
+        # if the date has changed since last check -> we crossed midnight
+        if current_date != LAST_AGGREGATED_DATE:
+            # aggregate for previous day, aka 'yesterday'
+            yesterday = (current_date - timedelta(days=1)).isoformat()
+
+            try:
+                aggregate_daily_data(yesterday)
+            except Exception as e:
+                print(f"[Aggregator Thread] Error aggregating data for {yesterday}: {e}")
+            
+            # update global so it doesn't repeat for same day
+            LAST_AGGREGATED_DATE = current_date
+
+        time.sleep(600)
 
 BITCOIN_RSS_URL = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
 
@@ -135,5 +164,11 @@ def results():
 if __name__ == "__main__":
     init_db()
     # load models after importing to not clash, avoiding "spawn" errors
-    init_models() 
+    init_models()
+
+    # start background aggregator thread
+    # daemon=True ensures this background thread won't block the main thread from exiting (it dies if the main program stops).
+    agg_thread = threading.Thread(target=daily_aggregator_thread, daemon=True)
+    agg_thread.start()
+
     app.run(debug=True)
