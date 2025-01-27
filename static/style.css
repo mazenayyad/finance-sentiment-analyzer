@@ -55,7 +55,7 @@ body {
 /* HERO SECTION */
 .hero-section {
   position: relative;
-  background: url("img/waves.png") no-repeat center / cover;
+  background: url("/static/img/waves.png") no-repeat center / cover;
   min-height: 350px;
   color: #fff;
 }
