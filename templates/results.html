@@ -58,6 +58,13 @@
       A neutral sentiment often indicates that the article is primarily factual or balanced, rather than strongly bullish (positive) or bearish (negative).
     </p>
 
+    <select id="sentimentFilter" class="filter-dropdown">
+      <option value="all">All</option>
+      <option value="Positive">Positive</option>
+      <option value="Neutral">Neutral</option>
+      <option value="Negative">Negative</option>
+    </select>
+
     <div class="articles-container" id="articles-container">
       {% for article in articles %}
         <div class="article-card" data-sentiment="{{ article.sentiment_label }}">
@@ -155,5 +162,23 @@
         });
     }
 })();</script>
+
+  <!-- Inline script to filter cards based on sentiment -->
+  <script>
+    const filterSelect = document.getElementById("sentimentFilter");
+    filterSelect.addEventListener('change', () => {
+      const selected = filterSelect.value; // "all", "Positive", "Neutral", "Negative"
+      const articles = document.querySelectorAll('.article-card');
+
+      articles.forEach(card => {
+        const cardSentiment = card.getAttribute('data-sentiment');
+        if(selected == 'all' || cardSentiment == selected) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
