@@ -252,7 +252,6 @@ body {
   line-height: 1.4;
 }
 
-
 .date-source {
   margin: 0;
   font-size: 0.9rem;
@@ -260,7 +259,6 @@ body {
 }
 
 .article-card h2 {
-  
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 0.4rem;
@@ -278,12 +276,6 @@ body {
   text-decoration: underline;
 }
 
-/* .article-summary {
-  line-height: 1.7;
-  font-size: 1.05rem;
-  margin-bottom: 1rem;
-} */
-
 .ai-summary {
   margin: 1rem 0;
   padding: 1rem;
@@ -291,18 +283,19 @@ body {
   border-left: 4px solid #3282B8;
   border-radius: 4px;
 }
+
 .ai-summary h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;
   font-weight: 600;
   color: #ffffff;
 }
+
 .ai-summary p {
   margin: 0;
   line-height: 1.5;
   color: #fff;
 }
-
 
 .article-card[data-sentiment="Positive"] {
   border-left: 4px solid #28a745;
@@ -395,4 +388,31 @@ body {
   margin: 0;  
   font-size: 1rem;
   line-height: 1.5;
+}
+
+/* FILTER DROPDOWN */
+#sentimentFilter {
+  appearance: none; /* removes OS-specific dropdown arrow in some browsers */
+  background-color: #2F2F2F;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='14' height='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23ddd' fill='none' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 12px 8px;
+}
+
+#sentimentFilter:hover {
+  background-color: #3b3b3b;
+}
+
+#sentimentFilter:focus {
+  outline: none; 
+  border-color: #3282B8;
+  box-shadow: 0 0 3px #3282B8;
 }
