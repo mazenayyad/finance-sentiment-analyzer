@@ -24,13 +24,10 @@ def daily_aggregator_thread():
 
         # if the date has changed since last check -> we crossed midnight
         if current_date != LAST_AGGREGATED_DATE:
-            # aggregate for previous day, aka 'yesterday'
-            yesterday = (current_date - timedelta(days=1)).isoformat()
-
             try:
-                aggregate_daily_data(yesterday)
+                aggregate_daily_data()
             except Exception as e:
-                print(f"[Aggregator Thread] Error aggregating data for {yesterday}: {e}")
+                print(f"[Aggregator Thread] Error aggregating data for yesterday: {e}")
             
             # update global so it doesn't repeat for same day
             LAST_AGGREGATED_DATE = current_date
