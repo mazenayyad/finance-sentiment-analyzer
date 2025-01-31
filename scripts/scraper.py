@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 from database import article_exists
 from datetime import datetime
+import uuid
 
 load_dotenv()
 
@@ -86,6 +87,12 @@ def get_final_url(redirect_url, contains):
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    # generate a unique directory for user data
+    unique_dir = f"/tmp/chrome-{uuid.uuid4()}"
+    chrome_options.add_argument(f'--user-data-dir={unique_dir}')
 
     driver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
     service = Service(driver_path)
