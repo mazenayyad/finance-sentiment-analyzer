@@ -7,4 +7,4 @@ python-dotenv
 requests
 selenium
 torch
-transformersx
+transformers

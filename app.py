@@ -158,14 +158,20 @@ def results():
 
     return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated, daily_data=daily_data, chart_html=chart_html)
 
-if __name__ == "__main__":
-    init_db()
-    # load models after importing to not clash, avoiding "spawn" errors
-    init_models()
+# if __name__ == "__main__":
+#     init_db()
+#     # load models after importing to not clash, avoiding "spawn" errors
+#     init_models()
 
-    # start background aggregator thread
-    # daemon=True ensures this background thread won't block the main thread from exiting (it dies if the main program stops).
-    agg_thread = threading.Thread(target=daily_aggregator_thread, daemon=True)
-    agg_thread.start()
+#     # start background aggregator thread
+#     # daemon=True ensures this background thread won't block the main thread from exiting (it dies if the main program stops).
+#     agg_thread = threading.Thread(target=daily_aggregator_thread, daemon=True)
+#     agg_thread.start()
 
-    app.run(debug=True)
+#     app.run(debug=True)
+
+init_db()
+init_models()
+
+agg_thread = threading.Thread(target=daily_aggregator_thread, daemon=True)
+agg_thread.start()

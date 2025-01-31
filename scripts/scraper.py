@@ -87,7 +87,7 @@ def get_final_url(redirect_url, contains):
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
 
-    driver_path = os.getenv("CHROMEDRIVER_PATH")
+    driver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
     service = Service(driver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
