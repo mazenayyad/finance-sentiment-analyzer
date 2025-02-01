@@ -12,8 +12,11 @@ from scripts.aggregator import aggregate_daily_data
 
 BITCOIN_RSS_URL = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
 LAST_AGGREGATED_DATE = None
+LAST_SCRAPE_TIME = None
+SCRAPE_INTERVAL_HOURS = 8
 
 def periodic_scrape_thread():
+    global LAST_SCRAPE_TIME
     while True:
         try:
             # scrape articles
@@ -37,9 +40,12 @@ def periodic_scrape_thread():
                     sentiment_score=article["sentiment_score"],
                     sentiment_label=article["sentiment_label"]
                 )
+
+            # after successful scraping
+            LAST_SCRAPE_TIME = datetime.utcnow()
         except Exception as e:
             print(f"Error occurred while periodically scraping: {e}")
-        time.sleep(8 * 3600) # sleep for 8 hrs
+        time.sleep(SCRAPE_INTERVAL_HOURS * 3600) # sleep for 8 hrs
 
 def daily_aggregator_thread():
     global LAST_AGGREGATED_DATE
@@ -77,13 +83,35 @@ def loading():
 
 @app.route("/results")
 def results():
+    global LAST_SCRAPE_TIME, SCRAPE_INTERVAL_HOURS
+    
     # fetch all articles from todays date
     utc_today_str = datetime.utcnow().date().isoformat()
     todays_articles = fetch_articles_by_date(utc_today_str)
 
     agg_label, agg_score = aggregate_numeric_scores(todays_articles)
 
-    last_updated = datetime.utcnow().strftime("%d %b, %Y %H:%M UTC")
+    if LAST_SCRAPE_TIME is not None:
+        last_updated = LAST_SCRAPE_TIME.strftime("%d %b, %Y %H:%M UTC")
+    else:
+        last_updated = "Never (no data yet)"
+
+    # compute how long until the next scrape
+    if LAST_SCRAPE_TIME is not None:
+        next_scrape_dt = LAST_SCRAPE_TIME + timedelta(hours=SCRAPE_INTERVAL_HOURS)
+        now_utc = datetime.utcnow()
+        time_remaining = next_scrape_dt - now_utc
+
+        if time_remaining.total_seconds() > 0:
+            hours_left = int(time_remaining.total_seconds() // 3600)
+            minutes_left = int(time_remaining.total_seconds() % 3600 // 60)
+            time_until_next_str = f"{hours_left}h {minutes_left}m"
+        else:
+            # if it's already past schedule time but thread hasn't run yet
+            time_until_next_str = "Currently analyzing..."
+    else:
+        time_until_next_str = "Error: This is the first run/first scrape. Please wait until the scrape is done then refresh."
+
 
     daily_data = fetch_finance_daily()
 
@@ -145,7 +173,7 @@ def results():
         # convert to html snippet. returns only the div and script for the chart, not a full HTML document
         chart_html = fig.to_html(full_html=False)
 
-    return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated, daily_data=daily_data, chart_html=chart_html)
+    return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated, time_until_next=time_until_next_str, daily_data=daily_data, chart_html=chart_html)
 
 
 init_db()
