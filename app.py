@@ -10,7 +10,36 @@ import pandas as pd
 import time
 from scripts.aggregator import aggregate_daily_data
 
+BITCOIN_RSS_URL = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
 LAST_AGGREGATED_DATE = None
+
+def periodic_scrape_thread():
+    while True:
+        try:
+            # scrape articles
+            articles = scrape(BITCOIN_RSS_URL)
+
+            # summarize each article
+            for article in articles:
+                article["summary"] = summarize_text(article["content"])
+
+            # analyze sentiment
+            analyzed_articles = analyze_sentiment(articles)
+
+            # insert into db
+            for article in analyzed_articles:
+                insert_articles(
+                    title=article["title"],
+                    source=article["source"],
+                    pub_date=article["pub_date"],
+                    final_url=article["final_url"],
+                    summary=article["summary"],
+                    sentiment_score=article["sentiment_score"],
+                    sentiment_label=article["sentiment_label"]
+                )
+        except Exception as e:
+            print(f"Error occurred while periodically scraping: {e}")
+        time.sleep(8 * 3600) # sleep for 8 hrs
 
 def daily_aggregator_thread():
     global LAST_AGGREGATED_DATE
@@ -32,11 +61,9 @@ def daily_aggregator_thread():
             # update global so it doesn't repeat for same day
             LAST_AGGREGATED_DATE = current_date
 
-        time.sleep(600)
+        time.sleep(1800) # sleep for 30 min
 
-BITCOIN_RSS_URL = "https://news.google.com/rss/search?q=Bitcoin&hl=en-US&gl=US&ceid=US:en"
 
-SCRAPE_DONE = False
 
 app = Flask(__name__)
 
@@ -44,47 +71,9 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
-def long_scrape():
-    global SCRAPE_DONE
-
-    articles = scrape(BITCOIN_RSS_URL)
-
-    # summarize each article
-    for article in articles:
-        article["summary"] = summarize_text(article["content"])
-
-    # perform sentiment analysis
-    analyzed_articles = analyze_sentiment(articles)
-
-    # insert new articles in database
-    for article in articles:
-        insert_articles(
-            title=article["title"],
-            source=article["source"],
-            pub_date=article["pub_date"],
-            final_url=article["final_url"],
-            summary=article["summary"],
-            sentiment_score=article["sentiment_score"],
-            sentiment_label=article["sentiment_label"]
-        )
-
-    SCRAPE_DONE = True
-
 @app.route("/loading")
 def loading():
-    global SCRAPE_DONE
-    SCRAPE_DONE = False
-    thread = threading.Thread(target=long_scrape)
-    thread.start()
     return render_template("loading.html")
-
-@app.route("/check_status")
-def check_status():
-    global SCRAPE_DONE
-    if SCRAPE_DONE:
-        return "done"
-    else:
-        return "not done"
 
 @app.route("/results")
 def results():
@@ -158,20 +147,13 @@ def results():
 
     return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated, daily_data=daily_data, chart_html=chart_html)
 
-# if __name__ == "__main__":
-#     init_db()
-#     # load models after importing to not clash, avoiding "spawn" errors
-#     init_models()
-
-#     # start background aggregator thread
-#     # daemon=True ensures this background thread won't block the main thread from exiting (it dies if the main program stops).
-#     agg_thread = threading.Thread(target=daily_aggregator_thread, daemon=True)
-#     agg_thread.start()
-
-#     app.run(debug=True)
 
 init_db()
+# load models after importing to not clash, avoiding "spawn" errors
 init_models()
+
+scrape_thread = threading.Thread(target=periodic_scrape_thread, daemon=True)
+scrape_thread.start()
 
 agg_thread = threading.Thread(target=daily_aggregator_thread, daemon=True)
 agg_thread.start()
