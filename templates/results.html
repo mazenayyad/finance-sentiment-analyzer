@@ -48,59 +48,67 @@
       Next scrape in: {{ time_until_next }}
     </p>
 
-    <!-- Displays the overall sentiment -->
-    <p class="overall-sentiment {{ agg_label|lower }}">
-      Overall Sentiment: {{ agg_label }} ({{ agg_score|round(0) }})
-    </p>
+    {% if articles|length > 0 %}
+      <!-- Displays the overall sentiment -->
+      <p class="overall-sentiment {{ agg_label|lower }}">
+        Overall Sentiment: {{ agg_label }} ({{ agg_score|round(0) }})
+      </p>
 
-    <p class="score-explanation">
-      The sentiment score ranges from -100 (very negative) to +100 (very positive).
-    </p>
+      <p class="score-explanation">
+        The sentiment score ranges from -100 (very negative) to +100 (very positive).
+      </p>
 
-    <p class ="score-explanation">
-      A neutral sentiment often indicates that the article is primarily factual or balanced, rather than strongly bullish (positive) or bearish (negative).
-    </p>
+      <p class ="score-explanation">
+        A neutral sentiment often indicates that the article is primarily factual or balanced, rather than strongly bullish (positive) or bearish (negative).
+      </p>
 
-    <select id="sentimentFilter" class="filter-dropdown">
-      <option value="all">All</option>
-      <option value="Positive">Positive</option>
-      <option value="Neutral">Neutral</option>
-      <option value="Negative">Negative</option>
-    </select>
+      <select id="sentimentFilter" class="filter-dropdown">
+        <option value="all">All</option>
+        <option value="Positive">Positive</option>
+        <option value="Neutral">Neutral</option>
+        <option value="Negative">Negative</option>
+      </select>
 
-    <div class="articles-container" id="articles-container">
-      {% for article in articles %}
-        <div class="article-card" data-sentiment="{{ article.sentiment_label }}">
-          <!-- Card Header / Metadata Bar -->
-          <div class="card-header">
-            <p class="date-source">
-              <strong>Date:</strong> {{ article.pub_date }} 
-              &nbsp;|&nbsp; 
-              <strong>Source:</strong> {{ article.source }}
+      <div class="articles-container" id="articles-container">
+        {% for article in articles %}
+          <div class="article-card" data-sentiment="{{ article.sentiment_label }}">
+            <!-- Card Header / Metadata Bar -->
+            <div class="card-header">
+              <p class="date-source">
+                <strong>Date:</strong> {{ article.pub_date }} 
+                &nbsp;|&nbsp; 
+                <strong>Source:</strong> {{ article.source }}
+              </p>
+            </div>
+
+            <h2>{{ article.title }}</h2>
+
+            <p>
+              <strong>Link:</strong>
+              <a href="{{ article.final_url }}" target="_blank" class="article-link">
+                Original Article
+              </a>
             </p>
+
+            <div class="ai-summary">
+              <h3>AI-Generated Summary</h3>
+              <p>{{ article.summary }}</p>
+            </div>          
+
+            <!-- Sentiment badge -->
+            <span class="sentiment-badge {{ article.sentiment_label|lower }}">
+              {{ article.sentiment_label }} ({{ article.sentiment_score|round(0) }})
+            </span>
           </div>
-
-          <h2>{{ article.title }}</h2>
-
-          <p>
-            <strong>Link:</strong>
-            <a href="{{ article.final_url }}" target="_blank" class="article-link">
-              Original Article
-            </a>
-          </p>
-
-          <div class="ai-summary">
-            <h3>AI-Generated Summary</h3>
-            <p>{{ article.summary }}</p>
-          </div>          
-
-          <!-- Sentiment badge -->
-          <span class="sentiment-badge {{ article.sentiment_label|lower }}">
-            {{ article.sentiment_label }} ({{ article.sentiment_score|round(0) }})
-          </span>
-        </div>
-      {% endfor %}
-    </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="no-articles">
+        <p>
+          No articles have been analyzed so far today. Please check back later!
+        </p>
+      </div>
+    {% endif %}
 
     <!-- "Load More" button. Hidden by default, only shown if > 6 articles (2 rows). -->
     <button class="load-more" id="loadMoreBtn" style="display: none;">Load More</button>

@@ -416,3 +416,21 @@ body {
   border-color: #3282B8;
   box-shadow: 0 0 3px #3282B8;
 }
+
+/* NO ARTICLES MESSAGE */
+.no-articles {
+  background-color: #444;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  text-align: center;
+  max-width: 600px;
+  margin: 2rem auto 0;
+  font-weight: 600;
+}
+
+.no-articles p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
