@@ -367,14 +367,16 @@ body {
   margin-bottom: 4rem;
   border-top: 1px solid #444;
   padding-top: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .chart-section h2 {
   color: #ffffff;
   margin-bottom: 1rem;
-  text-align: left;
   font-size: 1.8rem;
   font-weight: 700;
+  text-align: left;
 }
 
 .no-history-message {
