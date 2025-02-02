@@ -129,6 +129,8 @@ def results():
             go.Scatter(
             x = df["date_str"],
             y = df["avg_sentiment"],
+            marker={'size':6},
+            line={'width':2},
             name = "Average Sentiment",
             mode = "lines+markers"
             ),
@@ -150,28 +152,45 @@ def results():
         # customizing layout and axis
         fig.update_layout(
             template="plotly_dark",
-            title = "Daily Sentiment vs. BTC Price - (Last 30 days)",
+            title={'text':"Daily Sentiment vs. BTC Price",'x':0.5},
+            margin={'l':50,'r':50,'t':50,'b':50},
             hovermode = "x unified",
-            font = {"color": "#ffffff"}
+            font = {"color": "#ffffff", 'size':12},
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            legend={'x':0.02,'y':0.98,'bgcolor':"rgba(0,0,0,0)"}
         )
 
         # sentiment - primary y-axis
         fig.update_yaxes(
             title_text = "Average Sentiment (-100 to 100)",
-            range = [-100, 100], # fixed range
+            range = [-110, 110], # fixed range. so 0 sentiment can be visible
             secondary_y = False
         )
 
         # btc price - secondary y-axis
         fig.update_yaxes(
             title_text = "BTC Price (USD)",
+            tickformat= ",.0f",
             secondary_y = True
         )
 
-        fig.update_xaxes(title_text="Date")
+        fig.update_xaxes(
+            title_text="Date",
+            tickformat="%b %d", # ex: Jan 31
+            dtick = "D1" # daily ticks
+        )
+
+        fig.update_traces(
+            hovertemplate="Date: %{x}<br>Sentiment: %{y}",
+            selector={'name':"Average Sentiment"}
+        )
 
         # convert to html snippet. returns only the div and script for the chart, not a full HTML document
-        chart_html = fig.to_html(full_html=False)
+        chart_html = fig.to_html(
+            full_html=False,
+            config={'displaylogo':False,'scrollZoom':False,'displayModeBar':False}
+        )
 
     return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated, time_until_next=time_until_next_str, daily_data=daily_data, chart_html=chart_html)
 
