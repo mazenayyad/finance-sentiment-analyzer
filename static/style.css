@@ -165,22 +165,38 @@ body {
 /* RESULTS SECTION */
 .results-section {
   background-color: #1B262C;
+  margin: 2rem auto;
   padding: 4rem 2rem;
-  margin-top: 2rem;
   color: #fff;
   max-width: 1200px;
-  margin: 0 auto;
-}
-
-.last-updated {
-  font-size: 0.9rem;
-  color: #aaa;
-  margin-bottom: 1rem;
 }
 
 .results-section h1 {
   font-size: 1.8rem;
   font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.chart-section h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+/* CHART SECTION */
+.chart-section {
+  background-color: #1B262C;
+  margin: 2rem auto;
+  padding: 4rem 2rem;
+  border-top: 1px solid #444;
+  color: #fff;
+  max-width: 1200px;
+}
+
+.last-updated {
+  font-size: 0.9rem;
+  color: #aaa;
   margin-bottom: 1rem;
 }
 
@@ -362,23 +378,7 @@ body {
   box-shadow: 0 5px 10px rgba(0,0,0,0.4);
 }
 
-.chart-section {
-  margin-top: 2rem;
-  margin-bottom: 4rem;
-  border-top: 1px solid #444;
-  padding-top: 2rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-
-.chart-section h2 {
-  color: #ffffff;
-  margin-bottom: 1rem;
-  font-size: 1.8rem;
-  font-weight: 700;
-  text-align: left;
-}
-
+/* NO HISTORICAL DATA BOX */
 .no-history-message {
   background-color: #444;
   color: #fff;
@@ -398,7 +398,7 @@ body {
 
 /* FILTER DROPDOWN */
 #sentimentFilter {
-  appearance: none; /* removes OS-specific dropdown arrow in some browsers */
+  appearance: none;
   background-color: #2F2F2F;
   color: #fff;
   border: 1px solid #444;
