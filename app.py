@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from scripts.scraper import scrape
 from scripts.analysis import init_models, summarize_text, analyze_sentiment, aggregate_numeric_scores
 from database import insert_articles, init_db, fetch_articles_by_date, fetch_finance_daily
@@ -85,36 +85,51 @@ def loading():
 def results():
     global LAST_SCRAPE_TIME, SCRAPE_INTERVAL_HOURS
     
-    # fetch all articles from todays date
-    utc_today_str = datetime.utcnow().date().isoformat()
-    todays_articles = fetch_articles_by_date(utc_today_str)
+    today_str = datetime.utcnow().date().isoformat()
 
-    agg_label, agg_score = aggregate_numeric_scores(todays_articles)
+    # read the 'timeframe' parameter from the URL
+    # if ?timeframe= is missing, default to "today"
+    timeframe = request.args.get("timeframe", "today")
+
+    # if user requested "yesterday"
+    if timeframe == "yesterday":
+        yesterday_str = (datetime.utcnow().date() - timedelta(days=1)).isoformat()
+        articles_for_that_day = fetch_articles_by_date(yesterday_str)
+
+        date_label = "Yesterday" # for display in UI
+
+        # since "yesterday" is a past date, there's no concept of next scrape time
+        time_until_next_str = "N/A (past date)"
+    else:
+        # otherwise, fetch "today" by default
+        articles_for_that_day = fetch_articles_by_date(today_str)
+
+        date_label = "Today"
+
+        # will show how long until next scrape, if we know the last scrape time
+        if LAST_SCRAPE_TIME is not None:
+            next_scrape_dt = LAST_SCRAPE_TIME + timedelta(hours=SCRAPE_INTERVAL_HOURS)
+            now_utc = datetime.utcnow()
+            time_remaining = next_scrape_dt - now_utc
+
+            if time_remaining.total_seconds() > 0:
+                hours_left = int(time_remaining.total_seconds() // 3600)
+                minutes_left = int(time_remaining.total_seconds() % 3600 // 60)
+                time_until_next_str = f"{hours_left}h {minutes_left}m"
+            else:
+                # if it's already past schedule time but thread hasn't run yet
+                time_until_next_str = "Currently analyzing..."
+        else:
+            time_until_next_str = "Error: This is the first run/first scrape. Please wait until the scrape is done then refresh."
+
+    agg_label, agg_score = aggregate_numeric_scores(articles_for_that_day)
 
     if LAST_SCRAPE_TIME is not None:
         last_updated = LAST_SCRAPE_TIME.strftime("%d %b, %Y %H:%M UTC")
     else:
         last_updated = "Never (no data yet)"
 
-    # compute how long until the next scrape
-    if LAST_SCRAPE_TIME is not None:
-        next_scrape_dt = LAST_SCRAPE_TIME + timedelta(hours=SCRAPE_INTERVAL_HOURS)
-        now_utc = datetime.utcnow()
-        time_remaining = next_scrape_dt - now_utc
-
-        if time_remaining.total_seconds() > 0:
-            hours_left = int(time_remaining.total_seconds() // 3600)
-            minutes_left = int(time_remaining.total_seconds() % 3600 // 60)
-            time_until_next_str = f"{hours_left}h {minutes_left}m"
-        else:
-            # if it's already past schedule time but thread hasn't run yet
-            time_until_next_str = "Currently analyzing..."
-    else:
-        time_until_next_str = "Error: This is the first run/first scrape. Please wait until the scrape is done then refresh."
-
-
     daily_data = fetch_finance_daily()
-
     if not daily_data:
         chart_html = ""
     else:
@@ -198,7 +213,7 @@ def results():
             config={'displaylogo':False,'scrollZoom':False,'displayModeBar':False}
         )
 
-    return render_template("results.html", articles=todays_articles, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated, time_until_next=time_until_next_str, daily_data=daily_data, chart_html=chart_html)
+    return render_template("results.html", articles=articles_for_that_day, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated, time_until_next=time_until_next_str, daily_data=daily_data, chart_html=chart_html, timeframe=timeframe, date_label=date_label)
 
 
 init_db()

@@ -397,7 +397,7 @@ body {
 }
 
 /* FILTER DROPDOWN */
-#sentimentFilter {
+.filter-dropdown {
   appearance: none;
   background-color: #2F2F2F;
   color: #fff;
@@ -413,11 +413,11 @@ body {
   background-size: 12px 8px;
 }
 
-#sentimentFilter:hover {
+.filter-dropdown:hover {
   background-color: #3b3b3b;
 }
 
-#sentimentFilter:focus {
+.filter-dropdown:focus {
   outline: none; 
   border-color: #3282B8;
   box-shadow: 0 0 3px #3282B8;

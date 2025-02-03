@@ -48,6 +48,29 @@
       Next scrape in: {{ time_until_next }}
     </p>
 
+    <!-- DROPDOWN: Choose "Today" or "Yesterday" -->
+    <div style="margin-bottom: 1rem;">
+      <label for="timeframeSelect" style="color:#aaa; font-weight:600;">Select Day:</label>
+      <select id="timeframeSelect" class="filter-dropdown">
+        <option value="today"
+          {% if timeframe == 'today' %} selected {% endif %}>
+          Today
+        </option>
+        <option value="yesterday"
+          {% if timeframe == 'yesterday' %} selected {% endif %}>
+          Yesterday
+        </option>
+      </select>
+    </div>
+
+    <!-- SCRIPT: On dropdown change, reload the page with ?timeframe=... -->
+    <script>
+      document.getElementById('timeframeSelect').addEventListener('change', function() {
+        const chosen = this.value;
+        window.location.href = "/results?timeframe=" + chosen;
+      });
+    </script>
+
     {% if articles|length > 0 %}
       <!-- Displays the overall sentiment -->
       <p class="overall-sentiment {{ agg_label|lower }}">
@@ -105,7 +128,7 @@
     {% else %}
       <div class="no-articles">
         <p>
-          No articles have been analyzed so far today. Please check back later!
+          No articles have been analyzed so far {{ data_label }}. Please check back later!
         </p>
       </div>
     {% endif %}
