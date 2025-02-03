@@ -124,7 +124,19 @@ def results():
         # creating a figure with secondary y-axis
         fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-        # primary y-axis (avg sentiment)
+        # primary y-axis (btc price)
+        fig.add_trace(
+            go.Scatter(
+            x = df["date_str"],
+            y = df["btc_price"],
+            name = "Bitcoin Price (USD)",
+            mode = "lines+markers",
+            line_color = "orange"
+            ),
+            secondary_y = False
+        )
+
+        # secondary y-axis (avg sentiment)
         fig.add_trace(
             go.Scatter(
             x = df["date_str"],
@@ -133,18 +145,6 @@ def results():
             line={'width':2},
             name = "Average Sentiment",
             mode = "lines+markers"
-            ),
-            secondary_y = False
-        )
-
-        # seconday y-axis (btc price)
-        fig.add_trace(
-            go.Scatter(
-            x = df["date_str"],
-            y = df["btc_price"],
-            name = "Bitcoin Price (USD)",
-            mode = "lines+markers",
-            line_color = "orange"
             ),
             secondary_y = True
         )
@@ -158,20 +158,21 @@ def results():
             font = {"color": "#ffffff", 'size':12},
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            legend={'x':0.02,'y':0.98,'bgcolor':"rgba(0,0,0,0)"}
+            legend={'x':0.02,'y':0.98,'bgcolor':"rgba(0,0,0,0)"},
+            hoverlabel={'bgcolor':"rgba(0, 0, 0, 0.7)",'font_color':"#ffffff"}
         )
 
-        # sentiment - primary y-axis
-        fig.update_yaxes(
-            title_text = "Average Sentiment (-100 to 100)",
-            range = [-110, 110], # fixed range. so 0 sentiment can be visible
-            secondary_y = False
-        )
-
-        # btc price - secondary y-axis
+        # btc price - primary y-axis
         fig.update_yaxes(
             title_text = "BTC Price (USD)",
             tickformat= ",.0f",
+            secondary_y = False
+        )
+
+        # sentiment - secondary y-axis
+        fig.update_yaxes(
+            title_text = "Average Sentiment (-100 to 100)",
+            range = [-110, 110], # fixed range. so 0 sentiment can be visible
             secondary_y = True
         )
 
@@ -179,6 +180,11 @@ def results():
             title_text="Date",
             tickformat="%b %d", # ex: Jan 31
             dtick = "D1" # daily ticks
+        )
+
+        fig.update_traces(
+            hovertemplate="Date: %{x}<br>Price: %{y}",
+            selector={'name':"Bitcoin Price (USD)"}
         )
 
         fig.update_traces(
