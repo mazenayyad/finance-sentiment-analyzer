@@ -19,14 +19,25 @@ This project addresses the challenge of staying current with rapidly evolving cr
 
 ---
 
-## 3. Live Demo
+## 3. Tech Stack
+
+- **Python** and **Flask** – Core server-side application and routing  
+- **Selenium** + **BeautifulSoup** – Dynamic scraping and HTML parsing  
+- **Hugging Face Transformers** (BART, FinBERT) – Automated text summarization and sentiment analysis  
+- **SQLite** – Local data storage and daily sentiment aggregation  
+- **Plotly** – Interactive data visualization of price vs. sentiment  
+- **Docker** + **Gunicorn** – Containerized deployment for production  
+
+---
+
+## 4. Live Demo
 
 Check out the app in action:  
 [**Finance Sentiment Analyzer (Live)**](https://finance-sentiment-analyzer.up.railway.app/)
 
 ---
 
-## 4. Architecture
+## 5. Architecture
 
 1. **News Gathering**: Regularly fetches and updates relevant Bitcoin news links.  
 2. **Processing**: Summarizes articles and evaluates sentiment in near-real-time.  
@@ -35,14 +46,14 @@ Check out the app in action:
 
 ---
 
-## 5. Roadmap / Future Enhancements
+## 6. Roadmap / Future Enhancements
 
 - **Multi-Coin Coverage**: Expand automated analysis to include additional cryptocurrencies.    
 - **Enhanced Data Sources**: Broaden scope by including further news outlets or specialized crypto feeds.
 
 ---
 
-## 6. Contributing
+## 7. Contributing
 
 Contributions and suggestions are welcome. To propose changes or new features, please open an issue or submit a pull request. All collaboration is appreciated.
 
