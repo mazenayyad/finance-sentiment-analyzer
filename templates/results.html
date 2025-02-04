@@ -40,17 +40,20 @@
   <section class="results-section">
     <h1>Analyzed Articles</h1>
 
-    <!-- Displays the last updated time dynamically from Flask -->
-    <p class="last-updated">
-      Last updated: {{ last_updated }}
-    </p>
-    <p class="last-updated">
-      Next scrape in: {{ time_until_next }}
-    </p>
+    <!-- GROUPED METADATA LINES -->
+    <div class="metadata-lines">
+      <!-- Displays the last updated time dynamically from Flask -->
+      <p class="last-updated">
+        Last updated: {{ last_updated }}
+      </p>
+      <p class="last-updated">
+        Next scrape in: {{ time_until_next }}
+      </p>
+    </div>
 
     <!-- DROPDOWN: Choose "Today" or "Yesterday" -->
     <div style="margin-bottom: 1rem;">
-      <label for="timeframeSelect" style="color:#aaa; font-weight:600;">Select Day:</label>
+      <label for="timeframeSelect" style="color:#fff; font-weight:600;">Select Day:</label>
       <select id="timeframeSelect" class="filter-dropdown">
         <option value="today"
           {% if timeframe == 'today' %} selected {% endif %}>

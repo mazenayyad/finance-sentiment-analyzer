@@ -198,13 +198,13 @@ def results():
         )
 
         fig.update_traces(
-            hovertemplate="Date: %{x}<br>Price: %{y}",
-            selector={'name':"Bitcoin Price (USD)"}
+            hovertemplate="<b>%{x}</b><br>Price: $%{y}<extra></extra>",
+            selector={"name": "Bitcoin Price (USD)"}
         )
 
         fig.update_traces(
-            hovertemplate="Date: %{x}<br>Sentiment: %{y}",
-            selector={'name':"Average Sentiment"}
+            hovertemplate="Sentiment: %{y}<extra></extra>",
+            selector={"name": "Average Sentiment"}
         )
 
         # convert to html snippet. returns only the div and script for the chart, not a full HTML document

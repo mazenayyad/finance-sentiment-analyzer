@@ -194,10 +194,15 @@ body {
   max-width: 1200px;
 }
 
-.last-updated {
-  font-size: 0.9rem;
-  color: #aaa;
+/* METADATA LINES */
+.metadata-lines {
   margin-bottom: 1rem;
+}
+
+.metadata-lines p.last-updated {
+  font-size: 0.85rem;
+  color: #bbb;
+  margin-bottom: 0.3rem;
 }
 
 .results-section p {
