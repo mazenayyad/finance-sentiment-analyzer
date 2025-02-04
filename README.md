@@ -19,7 +19,14 @@ This project addresses the challenge of staying current with rapidly evolving cr
 
 ---
 
-## 3. Architecture
+## 3. Live Demo
+
+Check out the app in action:  
+[**Finance Sentiment Analyzer (Live)**](https://finance-sentiment-analyzer.up.railway.app/)
+
+---
+
+## 4. Architecture
 
 1. **News Gathering**: Regularly fetches and updates relevant Bitcoin news links.  
 2. **Processing**: Summarizes articles and evaluates sentiment in near-real-time.  
@@ -28,14 +35,14 @@ This project addresses the challenge of staying current with rapidly evolving cr
 
 ---
 
-## 4. Roadmap / Future Enhancements
+## 5. Roadmap / Future Enhancements
 
 - **Multi-Coin Coverage**: Expand automated analysis to include additional cryptocurrencies.    
 - **Enhanced Data Sources**: Broaden scope by including further news outlets or specialized crypto feeds.
 
 ---
 
-## 5. Contributing
+## 6. Contributing
 
 Contributions and suggestions are welcome. To propose changes or new features, please open an issue or submit a pull request. All collaboration is appreciated.
 
