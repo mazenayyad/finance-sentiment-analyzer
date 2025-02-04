@@ -77,8 +77,8 @@
     {% if articles|length > 0 %}
       <!-- Displays the overall sentiment -->
       <p class="overall-sentiment {{ agg_label|lower }}">
-        Overall Sentiment: {{ agg_label }} ({{ agg_score|round(0) }})
-        - ( {{ articles|length }} articles)
+        Overall Sentiment: {{ agg_label }} ({{ agg_score|round(0) }})<br>
+        ({{ articles|length }} articles)
       </p>
 
       <p class="score-explanation">
