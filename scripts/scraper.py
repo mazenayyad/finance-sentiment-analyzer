@@ -70,6 +70,20 @@ def scrape(rss_url):
                     "content": content
                 }
                 articles.append(article_dict)
+            elif ('Bitcoin.com News' == source_text):
+                url = get_final_url(redirect_link, "news.bitcoin.com")
+                if url == "":
+                    continue
+                
+                content = news_bitcoin_com(url)
+                article_dict = {
+                    "title": clean_title,
+                    "source": source_text,
+                    "pub_date": parsed_pub_date,
+                    "final_url": url,
+                    "content": content
+                }
+                articles.append(article_dict)
             else:
                 continue
         return articles
@@ -112,6 +126,35 @@ def get_final_url(redirect_url, contains):
 
     return final_url
 
+def yahoo_scraper(url):
+    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, "html.parser")
+        article_div = soup.find("div", class_=["body", "yf-tsvcyu"])
+
+        if article_div:
+            paragraphs = article_div.find_all("p", class_="yf-1pe5jgt")
+            content_lines = []
+
+            KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
+            for p in paragraphs:
+                p_text = p.get_text(strip=True).lower()
+                kw_found = False
+                for kw in KEYWORDS:
+                    if kw in p_text:
+                        kw_found = True
+                        break
+                if not kw_found:
+                    continue
+                content_lines.append(p.get_text(strip=True))
+            content = " ".join(content_lines)
+            return content
+        else:
+            return ""
+    else:
+        return ""
+
 def forbes_scraper(url):
     # return content which is a string
     response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
@@ -147,18 +190,17 @@ def forbes_scraper(url):
             return ""
     else:
         return ""
-    
-def yahoo_scraper(url):
+
+def news_bitcoin_com(url):
     response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, "html.parser")
-        article_div = soup.find("div", class_=["body", "yf-tsvcyu"])
+        article_div = soup.find("div", class_="article__body")
 
         if article_div:
-            paragraphs = article_div.find_all("p", class_="yf-1pe5jgt")
+            paragraphs = article_div.find_all("p")
             content_lines = []
-
             KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
             for p in paragraphs:
                 p_text = p.get_text(strip=True).lower()
@@ -169,6 +211,7 @@ def yahoo_scraper(url):
                         break
                 if not kw_found:
                     continue
+
                 content_lines.append(p.get_text(strip=True))
             content = " ".join(content_lines)
             return content
