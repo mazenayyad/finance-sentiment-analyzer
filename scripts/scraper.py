@@ -86,6 +86,20 @@ def scrape(rss_url):
                     "content": content
                 }
                 articles.append(article_dict)
+            elif ("CoinDesk" == source_text):
+                url = get_final_url(redirect_link, "coindesk.com")
+                if url == "":
+                    continue
+
+                content = coindesk_scraper(url)
+                article_dict = {
+                    "title": clean_title,
+                    "source": source_text,
+                    "pub_date": parsed_pub_date,
+                    "final_url": url,
+                    "content": content
+                }
+                articles.append(article_dict)
             else:
                 continue
         return articles
@@ -193,7 +207,7 @@ def forbes_scraper(url):
         return ""
     
 
-def fetch_dynamic_url(url):
+def fetch_dynamic_url(url, selector):
     """ 
     opens the given URL using Selenium, waits for the <div class="article__body"> to appear,
     then returns the entire HTML source as a string
@@ -220,7 +234,7 @@ def fetch_dynamic_url(url):
 
         # wait for the div.article__body to appear
         WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "div.article__body"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, selector))
         )
 
         # once it’s present, grab the rendered page source
@@ -236,7 +250,7 @@ def fetch_dynamic_url(url):
     return page_source    
     
 def news_bitcoin_com(url):
-    rendered_html = fetch_dynamic_url(url)
+    rendered_html = fetch_dynamic_url(url, "div.article__body")
 
     if not rendered_html:
         return ""
@@ -249,6 +263,38 @@ def news_bitcoin_com(url):
     if not article_div:
         return ""
 
+    paragraphs = article_div.find_all("p")
+    content_lines = []
+    KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
+
+    for p in paragraphs:
+        p_text = p.get_text(strip=True).lower()
+        kw_found = False
+        for kw in KEYWORDS:
+            if kw in p_text:
+                kw_found = True
+                break
+        if not kw_found:
+            continue
+
+        content_lines.append(p.get_text(strip=True))
+
+    # join into a single string
+    content = " ".join(content_lines)
+    return content
+
+def coindesk_scraper(url):
+    rendered_html = fetch_dynamic_url(url, "div.document-body")
+
+    if not rendered_html:
+        return ""
+    
+    soup = BeautifulSoup(rendered_html, "html.parser")
+
+    article_div = soup.find("div", class_="document-body")
+    if not article_div:
+        return ""
+    
     paragraphs = article_div.find_all("p")
     content_lines = []
     KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
