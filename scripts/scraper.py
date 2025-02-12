@@ -7,10 +7,12 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from database import article_exists
 from datetime import datetime
 import uuid
+from webdriver_manager.chrome import ChromeDriverManager
 
 load_dotenv()
 
@@ -108,8 +110,7 @@ def get_final_url(redirect_url, contains):
     unique_dir = f"/tmp/chrome-{uuid.uuid4()}"
     chrome_options.add_argument(f'--user-data-dir={unique_dir}')
 
-    driver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
-    service = Service(driver_path)
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     final_url = "" # define early incase exception
@@ -190,32 +191,80 @@ def forbes_scraper(url):
             return ""
     else:
         return ""
+    
 
-def news_bitcoin_com(url):
-    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+def fetch_dynamic_url(url):
+    """ 
+    opens the given URL using Selenium, waits for the <div class="article__body"> to appear,
+    then returns the entire HTML source as a string
+    """
 
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, "html.parser")
-        article_div = soup.find("div", class_="article__body")
+    # chrome options same as get_final_url
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
 
-        if article_div:
-            paragraphs = article_div.find_all("p")
-            content_lines = []
-            KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
-            for p in paragraphs:
-                p_text = p.get_text(strip=True).lower()
-                kw_found = False
-                for kw in KEYWORDS:
-                    if kw in p_text:
-                        kw_found = True
-                        break
-                if not kw_found:
-                    continue
+    # generate a unique user-data dir
+    unique_dir = f"/tmp/chrome-{uuid.uuid4()}"
+    chrome_options.add_argument(f'--user-data-dir={unique_dir}')
 
-                content_lines.append(p.get_text(strip=True))
-            content = " ".join(content_lines)
-            return content
-        else:
-            return ""
-    else:
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+
+    page_source = ""
+
+    try:
+        driver.get(url)
+
+        # wait for the div.article__body to appear
+        WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "div.article__body"))
+        )
+
+        # once it’s present, grab the rendered page source
+        page_source = driver.page_source
+
+    except Exception as e:
+        print(f"[fetch_dynamic_html] Exception: {e}")
         return ""
+
+    finally:
+        driver.quit()
+
+    return page_source    
+    
+def news_bitcoin_com(url):
+    rendered_html = fetch_dynamic_url(url)
+
+    if not rendered_html:
+        return ""
+
+    # parse with bs4
+    soup = BeautifulSoup(rendered_html, "html.parser")
+
+    # find the div
+    article_div = soup.find("div", class_="article__body")
+    if not article_div:
+        return ""
+
+    paragraphs = article_div.find_all("p")
+    content_lines = []
+    KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
+
+    for p in paragraphs:
+        p_text = p.get_text(strip=True).lower()
+        kw_found = False
+        for kw in KEYWORDS:
+            if kw in p_text:
+                kw_found = True
+                break
+        if not kw_found:
+            continue
+
+        content_lines.append(p.get_text(strip=True))
+
+    # join into a single string
+    content = " ".join(content_lines)
+    return content
