@@ -32,8 +32,13 @@ This project addresses the challenge of staying current with rapidly evolving cr
 
 ## 4. Live Demo
 
-Check out the app in action:  
-[**Finance Sentiment Analyzer (Live)**](https://finance-sentiment-analyzer.up.railway.app/)
+**Screenshot of the Homepage:**
+
+![Homepage Screenshot](./static/img/homepage.png)
+
+**App Overview in Action (GIF):**
+
+![Overview GIF](./static/img/overview.gif)
 
 ---
 
