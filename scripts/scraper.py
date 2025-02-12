@@ -86,20 +86,6 @@ def scrape(rss_url):
                     "content": content
                 }
                 articles.append(article_dict)
-            elif ("CoinDesk" == source_text):
-                url = get_final_url(redirect_link, "coindesk.com")
-                if url == "":
-                    continue
-
-                content = coindesk_scraper(url)
-                article_dict = {
-                    "title": clean_title,
-                    "source": source_text,
-                    "pub_date": parsed_pub_date,
-                    "final_url": url,
-                    "content": content
-                }
-                articles.append(article_dict)
             else:
                 continue
         return articles
@@ -263,38 +249,6 @@ def news_bitcoin_com(url):
     if not article_div:
         return ""
 
-    paragraphs = article_div.find_all("p")
-    content_lines = []
-    KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
-
-    for p in paragraphs:
-        p_text = p.get_text(strip=True).lower()
-        kw_found = False
-        for kw in KEYWORDS:
-            if kw in p_text:
-                kw_found = True
-                break
-        if not kw_found:
-            continue
-
-        content_lines.append(p.get_text(strip=True))
-
-    # join into a single string
-    content = " ".join(content_lines)
-    return content
-
-def coindesk_scraper(url):
-    rendered_html = fetch_dynamic_url(url, "div.document-body")
-
-    if not rendered_html:
-        return ""
-    
-    soup = BeautifulSoup(rendered_html, "html.parser")
-
-    article_div = soup.find("div", class_="document-body")
-    if not article_div:
-        return ""
-    
     paragraphs = article_div.find_all("p")
     content_lines = []
     KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
