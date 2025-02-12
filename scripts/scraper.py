@@ -86,6 +86,20 @@ def scrape(rss_url):
                     "content": content
                 }
                 articles.append(article_dict)
+            elif ('The Motley Fool' == source_text):
+                url = get_final_url(redirect_link, "fool.com")
+                if url == "":
+                    continue
+                
+                content = fool_scraper(url)
+                article_dict = {
+                    "title": clean_title,
+                    "source": source_text,
+                    "pub_date": parsed_pub_date,
+                    "final_url": url,
+                    "content": content
+                }
+                articles.append(article_dict)
             else:
                 continue
         return articles
@@ -140,7 +154,7 @@ def yahoo_scraper(url):
 
             KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
             for p in paragraphs:
-                p_text = p.get_text(strip=True).lower()
+                p_text = p.get_text(strip=True, separator=" ").lower()
                 kw_found = False
                 for kw in KEYWORDS:
                     if kw in p_text:
@@ -148,7 +162,7 @@ def yahoo_scraper(url):
                         break
                 if not kw_found:
                     continue
-                content_lines.append(p.get_text(strip=True))
+                content_lines.append(p.get_text(strip=True, separator=" "))
             content = " ".join(content_lines)
             return content
         else:
@@ -174,7 +188,7 @@ def forbes_scraper(url):
                 if p.find("strong") is not None:
                     continue
                 # check if its a relevant paragraph
-                p_text = p.get_text(strip=True).lower()
+                p_text = p.get_text(strip=True, separator=" ").lower()
                 kw_found = False
                 for kw in KEYWORDS:
                     if kw in p_text:
@@ -184,14 +198,46 @@ def forbes_scraper(url):
                     continue
 
                 # if passed both tests, keep it
-                content_lines.append(p.get_text(strip=True))
+                content_lines.append(p.get_text(strip=True, separator=" "))
             content = " ".join(content_lines)
             return content
         else:
             return ""
     else:
         return ""
-    
+
+def fool_scraper(url):
+    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, "html.parser")
+        article_div = soup.find("div", class_="article-body")
+        if article_div:
+            paragraphs = article_div.find_all("p")
+            content_lines = []
+
+            KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
+            for p in paragraphs:
+                # if paragraph has a <strong> tag, skip it
+                if p.find("strong") is not None:
+                    continue
+                # check if its a relevant paragraph
+                p_text = p.get_text(strip=True, separator=" ").lower()
+                kw_found = False
+                for kw in KEYWORDS:
+                    if kw in p_text:
+                        kw_found = True
+                        break # found at least 1 keyword. can stop checking
+                if not kw_found:
+                    continue
+
+                # if passed both tests, keep it
+                content_lines.append(p.get_text(strip=True, separator=" "))
+            content = " ".join(content_lines)
+            return content
+        else:
+            return ""
+    else:
+        return ""
 
 def fetch_dynamic_url(url, selector):
     """ 
@@ -254,7 +300,7 @@ def news_bitcoin_com(url):
     KEYWORDS = ["bitcoin", "crypto", "cryptocurrency", "btc", "ethereum", "eth"]
 
     for p in paragraphs:
-        p_text = p.get_text(strip=True).lower()
+        p_text = p.get_text(strip=True, separator=" ").lower()
         kw_found = False
         for kw in KEYWORDS:
             if kw in p_text:
@@ -263,7 +309,7 @@ def news_bitcoin_com(url):
         if not kw_found:
             continue
 
-        content_lines.append(p.get_text(strip=True))
+        content_lines.append(p.get_text(strip=True, separator=" "))
 
     # join into a single string
     content = " ".join(content_lines)
