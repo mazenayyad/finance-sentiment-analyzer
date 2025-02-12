@@ -96,7 +96,7 @@ def results():
         yesterday_str = (datetime.utcnow().date() - timedelta(days=1)).isoformat()
         articles_for_that_day = fetch_articles_by_date(yesterday_str)
 
-        date_label = "Yesterday" # for display in UI
+        date_label = "yesterday" # for display in UI
 
         # since "yesterday" is a past date, there's no concept of next scrape time
         time_until_next_str = "N/A (past date)"
@@ -104,7 +104,7 @@ def results():
         # otherwise, fetch "today" by default
         articles_for_that_day = fetch_articles_by_date(today_str)
 
-        date_label = "Today"
+        date_label = "today"
 
         # will show how long until next scrape, if we know the last scrape time
         if LAST_SCRAPE_TIME is not None:
@@ -215,13 +215,15 @@ def results():
 
     return render_template("results.html", articles=articles_for_that_day, agg_label=agg_label, agg_score=agg_score, last_updated=last_updated, time_until_next=time_until_next_str, daily_data=daily_data, chart_html=chart_html, timeframe=timeframe, date_label=date_label)
 
+if __name__ == "__main__":
+    init_db()
+    init_models()
 
-init_db()
-# load models after importing to not clash, avoiding "spawn" errors
-init_models()
+    scrape_thread = threading.Thread(target=periodic_scrape_thread, daemon=True)
+    scrape_thread.start()
 
-scrape_thread = threading.Thread(target=periodic_scrape_thread, daemon=True)
-scrape_thread.start()
+    agg_thread = threading.Thread(target=daily_aggregator_thread, daemon=True)
+    agg_thread.start()
 
-agg_thread = threading.Thread(target=daily_aggregator_thread, daemon=True)
-agg_thread.start()
+    # run Flask in debug mode for local testing
+    app.run(debug=True, host="0.0.0.0", port=5000)
