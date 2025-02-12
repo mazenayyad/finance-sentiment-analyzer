@@ -226,4 +226,4 @@ if __name__ == "__main__":
     agg_thread.start()
 
     # run Flask in debug mode for local testing
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5001)
