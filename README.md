@@ -1,4 +1,4 @@
-# Finance Sentiment Analyzer
+# Finance Sentiment Analyzer (DEMO BELOW)
 **AI-driven tool for analyzing Bitcoin-related news and visualizing sentiment trends.**
 
 ---
